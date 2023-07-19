@@ -1,0 +1,19 @@
+{
+  "name": "canvasflow",
+  "version": "1.0.0",
+  "description": "Draw objects, Move them, Control them.",
+  "main": "Lib/main.js",
+  "author": "Jehaad",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jehaad1/CanvasFlow.git"
+  },
+  "keywords": [
+    "Canvas",
+    "Drawing",
+    "Text",
+    "Graphics",
+    "SVG"
+  ]
+}
