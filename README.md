@@ -1,6 +1,6 @@
 # CanvasFlow
 
-### Installation
+## Installation
 
 ES Module Installation:
 ```js
