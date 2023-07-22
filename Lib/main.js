@@ -1,1 +1,534 @@
-let errorCodes=new Map([[100,"Missing props. Objects requires a 'id' property."],[101,"Invalid argument. Argument must be an object."],[102,"Invalid argument. Argument must be an array of objects."],[103,"Invalid canvas. No canvas captured."],[104,"Invalid argument. Argument must be a string."],[105,"Invalid argument. Argument must be a function."],[106,"Invalid ID. No object found with that ID."],[107,"Missing props. Custom objects requires a 'draw' property."],[108,"Invalid props. 'draw' must be a function."],[109,"Missing props. Objects requires a 'type' property."],[110,"Missing props. Image objects requires a 'url' property."],[111,"Updating props declined. 'id' cannot be updated."],[112,"Updating props declined. 'type' cannot be updated."],[113,"Invalid initalize props. 'defaultValues' must be an object."],[114,"Missing props. Text objects requires a 'text' property."],[115,"Missing props. Path objects requires a 'path' property."],]);export default class t{objects=new Map;images=new Map;defaultValues=new Map([["x",0],["y",0],["fill","black"],["stroke",{fill:"black",width:0},],["font",{family:"sans-serif",size:10},],["width",0],["height",0],["borderRadius",0],["rotation","black"],["opacity",1],["zIndex",0],["translate",{x:0,y:0}],]);canvas;ctx;touch=null;constructor(t,e){if(!(t instanceof HTMLElement)&&"string"!=typeof t)throw Error(errorCodes.get(103));if(e&&e.defaultValues){if("object"!=typeof e.defaultValues)throw Error(errorCodes.get(113));Object.entries(e.defaultValues).forEach(([t,e])=>{this.defaultValues.set(t,e)})}this.canvas="string"==typeof t?document.querySelector(t):t,this.ctx=this.canvas.getContext("2d")}createObject(t){if("object"!=typeof t)throw Error(errorCodes.get(101));let{id:e,...s}=t;if(null==e)throw Error(errorCodes.get(100));if("path"===s.type&&s.path){let{width:r,height:i}=getPathProps(s.path);s.width=r,s.height=i}if(this.objects.set(e,s),"image"===s.type){if(!s.url)throw Error(errorCodes.get(110));let o=new Image;o.src=s.url,o.onload=()=>{this.images.set(e,o),drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues)}}else drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues)}getObject(t){if(null==t)throw Error(errorCodes.get(100));let e=this.objects.get(t);if(!e)throw Error(errorCodes.get(106));return e}updateObject(t,e){if(null==t)throw Error(errorCodes.get(100));if("object"!=typeof e)throw Error(errorCodes.get(101));let s=this.objects.get(t);if(!s)throw Error(errorCodes.get(106));let r=!1;if(Object.entries(e).forEach(([t,e])=>{if("id"===t)throw Error(errorCodes.get(111));if("type"===t)throw Error(errorCodes.get(112));if("url"===t&&(r=!0),"path"===t&&"path"===s.type){let{width:i,height:o}=getPathProps(e);s.width=i,s.height=o}s[t]=e}),"image"===s.type&&r){if(!s.url)throw Error(errorCodes.get(110));let i=new Image;i.src=s.url,i.onload=()=>{this.images.set(t,i),drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues)}}else drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues)}deleteObject(t){this.objects.delete(t),this.images.delete(t),drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues)}moveObject(t,e,s,r){let i=this.objects.get(t);if(!i)throw Error(errorCodes.get(106));"path"===i.type?i.translate?"relative"===r?(i.translate.x+=e,i.translate.y+=s):(i.translate.x=e,i.translate.y=s):i.translate={x:e,y:s}:"relative"===r?(i.x+=(i.x??0)+e,i.y+=(i.y??0)+s):(i.x=e,i.y=s),drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues)}getObjects(){return sortByZIndex(this.objects.entries(),this.defaultValues).map(([t,e])=>({id:t,...e}))}setObjects(t){if(!Array.isArray(t)||t.some(t=>"object"!=typeof t))throw Error(errorCodes.get(102));let e=[];t.forEach(t=>{let{id:s,...r}=t;if(null==s)throw Error(errorCodes.get(100));if("path"===r.type&&r.path){let{width:i,height:o}=getPathProps(r.path);r.width=i,r.height=o}if("image"===r.type){if(!r.url)throw Error(errorCodes.get(110));let a=new Image;a.src=r.url;let l=new Promise(t=>{a.onload=()=>{this.images.set(s,a),t()}});e.push(l)}this.objects.set(s,r)}),0===e.length?drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues):Promise.all(e).then(()=>{drawCanvas(this.canvas,this.objects,this.ctx,this.images,this.defaultValues)})}clearCanvas(){if(!this.canvas)throw Error(errorCodes.get(103));this.objects.clear(),this.ctx.setTransform(1,0,0,1,0,0),this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)}on(t,e){if("string"!=typeof t)throw Error(errorCodes.get(104));if("function"!=typeof e)throw Error(errorCodes.get(105));if(!this.canvas)throw Error(errorCodes.get(103));let s=s=>{s.objects=sortByZIndex(this.objects.entries(),this.defaultValues).filter(([,{x:e,y:r,translate:i,width:o,height:a,type:l,text:n}])=>{let h,c;if(t.startsWith("touch")){if("touchstart"===t&&null===this.touch&&(this.touch=s.touches[0].identifier),i&&(e=(i.x??0)+(e??0),r=(i.y??0)+(r??0)),"touchend"===t){if(this.touch!==s.changedTouches[0].identifier)return;h=s.changedTouches[0].clientX,c=s.changedTouches[0].clientY,this.touch=null}else{if(this.touch!==s.changedTouches[0].identifier)return;h=s.touches[0].clientX,c=s.touches[0].clientY}}else h=s.offsetX,c=s.offsetY;if("text"===l){let d=this.ctx.measureText(n);o=d.width,a=d.actualBoundingBoxAscent+d.actualBoundingBoxDescent}else if("circle"===l)return h>=e-o/2&&h<=e+o/2&&c>=r-a/2&&c<=r+a/2;return h>=e&&h<=e+o&&c>=r&&c<=r+a}).reverse().map(([t,e])=>({id:t,...e})),e(s)};return this.canvas.addEventListener(t,s),()=>{this.canvas.removeEventListener(t,s)}}};function drawCanvas(t,e,s,r,i){if(!t)throw Error(errorCodes.get(103));s.setTransform(1,0,0,1,0,0),s.clearRect(0,0,t.width,t.height),sortByZIndex(e.entries(),i).forEach(([e,o])=>{s.setTransform(1,0,0,1,0,0);let a=o.type||i.get("type"),l=o.x??i.get("x"),n=o.y??i.get("y"),h=o.text??i.get("text");if(s.fillStyle=o.fill||i.get("fill"),s.strokeStyle=o.stroke?.fill||i.get("stroke").fill,s.lineWidth=o.stroke?.width??i.get("stroke").width,s.globalAlpha=o.stroke?.opacity??i.get("opacity"),!a)throw Error(errorCodes.get(109));if("text"===a){if(null==h)throw Error(errorCodes.get(114));let c=o.font?.size??i.get("font").size,d=o.font?.family||i.get("font").family;s.textBaseline="top",s.font=`${c}px ${d}`,s.fillText(h,l,n),o.stroke&&o.stroke.width&&o.stroke.fill&&s.strokeText(h,l,n)}else{let g=o.width??i.get("width"),f=o.height??i.get("height"),u=o.borderRadius??i.get("borderRadius"),p=o.translate??i.get("translate"),$=o.rotation??i.get("rotation");if($&&(s.translate(l,n),s.rotate($),s.translate(-l,-n)),p&&(p.x||p.y)&&s.translate(p.x,p.y),"custom"===a){let{draw:w,..._}=o;if(!w)throw Error(errorCodes.get(107));if("function"!=typeof w)throw Error(errorCodes.get(108));w(s,t,_)}else if("image"===a){let b=r.get(e)||i.get("image");if(!b)return;s.drawImage(b,l,n,g,f)}else if("path"===a){s.beginPath();let y=o.path||i.get("path");if(!y)throw Error(errorCodes.get(115));let v=new Path2D(y);s.fill(v),o.stroke&&o.stroke.width&&o.stroke.fill&&s.stroke(v),s.closePath()}else"rectangle"===a?(s.beginPath(),s.moveTo(l+u,n),s.lineTo(l+g-u,n),s.arcTo(l+g,n,l+g,n+u,u),s.lineTo(l+g,n+f-u),s.arcTo(l+g,n+f,l+g-u,n+f,u),s.lineTo(l+u,n+f),s.arcTo(l,n+f,l,n+f-u,u),s.lineTo(l,n+u),s.arcTo(l,n,l+u,n,u),s.fill(),o.stroke&&o.stroke.width&&o.stroke.fill&&s.stroke(),s.closePath()):"triangle"===a?(s.beginPath(),s.moveTo(l+u,n),s.arcTo(l+g,n,l+g,n+f,u),s.arcTo(l+g,n+f,l,n+f,u),s.lineTo(l,n+u),s.arcTo(l,n,l+u,n,u),s.fill(),o.stroke&&o.stroke.width&&o.stroke.fill&&s.stroke(),s.closePath()):"circle"===a&&(s.beginPath(),s.ellipse(l,n,g/2,f/2,0,0,2*Math.PI),s.fill(),o.stroke&&o.stroke.width&&o.stroke.fill&&s.stroke(),s.closePath())}})}function sortByZIndex(t,e){return[...t].sort(([,t],[,s])=>{let r=t.zIndex??e.get("zIndex"),i=s.zIndex??e.get("zIndex");return void 0===r&&void 0===i?0:void 0===r&&i>0?-1:void 0===i&&r>0?1:r-i})}function getPathProps(t){let e=document.createElementNS("http://www.w3.org/2000/svg","svg"),s=document.createElementNS("http://www.w3.org/2000/svg","path");s.setAttribute("d",t),e.appendChild(s),document.body.appendChild(e);let{width:r,height:i}=s.getBoundingClientRect();return document.body.removeChild(e),{width:r,height:i}}
+const errorCodes = new Map([
+  [100, "Missing props. Objects require an 'id' property."],
+  [101, "Invalid argument. Argument must be an object."],
+  [102, "Invalid argument. Argument must be an array of objects."],
+  [103, "Invalid canvas. No canvas captured."],
+  [104, "Invalid argument. Argument must be a string."],
+  [105, "Invalid argument. Argument must be a function."],
+  [106, "Invalid ID. No object found with that ID."],
+  [107, "Missing props. Custom objects require a 'draw' property."],
+  [108, "Invalid props. 'draw' must be a function."],
+  [109, "Missing props. Objects require a 'type' property."],
+  [110, "Missing props. Image objects require a 'url' property."],
+  [111, "Updating props declined. 'id' cannot be updated."],
+  [112, "Updating props declined. 'type' cannot be updated."],
+  [113, "Invalid initialize props. 'defaultValues' must be an object."],
+  [114, "Missing props. Text objects require a 'text' property."],
+  [115, "Missing props. Path objects require a 'path' property."],
+]);
+
+export default class CanvasFlow {
+  objects = new Map();
+  images = new Map();
+  defaultValues = new Map([
+    ["x", 0],
+    ["y", 0],
+    ["fill", "black"],
+    ["stroke", { fill: "black", width: 0 }],
+    ["font", { family: "sans-serif", size: 10 }],
+    ["width", 0],
+    ["height", 0],
+    ["borderRadius", 0],
+    ["rotation", "black"],
+    ["opacity", 1],
+    ["zIndex", 0],
+    ["translate", { x: 0, y: 0 }],
+  ]);
+
+  canvas;
+  ctx;
+  touch = null;
+
+  constructor(element, options) {
+    if (!(element instanceof HTMLElement) && typeof element !== "string")
+      throw Error(errorCodes.get(103));
+
+    if (options && options.defaultValues) {
+      if (typeof options.defaultValues !== "object")
+        throw Error(errorCodes.get(113));
+
+      Object.entries(options.defaultValues).forEach(([key, value]) => {
+        this.defaultValues.set(key, value);
+      });
+    }
+
+    this.canvas =
+      typeof element === "string" ? document.querySelector(element) : element;
+
+    this.ctx = this.canvas.getContext("2d");
+  }
+
+  setObject(object) {
+    return new Promise((resolve, reject) => {
+      if (typeof object !== "object") return reject(Error(errorCodes.get(101)));
+
+      const { id, ...props } = object;
+
+      if (id === null) return reject(Error(errorCodes.get(100)));
+      if (props.type === "path" && props.path) {
+        const { width, height } = getPathProps(props.path);
+        if (!props.width) props.width = width;
+        if (!props.height) props.height = height;
+      }
+
+      this.objects.set(id, props);
+
+      if (props.type === "image") {
+        if (!props.url) return reject(Error(errorCodes.get(110)));
+
+        const image = new Image();
+        image.src = props.url;
+        image.onload = () => {
+          this.images.set(id, image);
+          drawCanvas(
+            this.canvas,
+            this.objects,
+            this.ctx,
+            this.images,
+            this.defaultValues
+          );
+          resolve(object);
+        };
+        image.onerror = reject;
+      } else {
+        drawCanvas(
+          this.canvas,
+          this.objects,
+          this.ctx,
+          this.images,
+          this.defaultValues
+        );
+        resolve(object);
+      }
+    });
+  }
+
+  setObjects(objects) {
+    return new Promise((resolve, reject) => {
+      if (
+        !Array.isArray(objects) ||
+        objects.some((o) => typeof o !== "object" || !o)
+      )
+        return reject(Error(errorCodes.get(102)));
+
+      const imagePromises = [];
+
+      objects.forEach((object) => {
+        const { id, ...props } = object;
+
+        if (id === null) return reject(Error(errorCodes.get(100)));
+
+        if (props.type === "path" && props.path) {
+          const { width, height } = getPathProps(props.path);
+          if (!props.width) props.width = width;
+          if (!props.height) props.height = height;
+        }
+
+        if (props.type === "image") {
+          if (!props.url) return reject(Error(errorCodes.get(110)));
+
+          const image = new Image();
+          image.src = props.url;
+          const imagePromise = new Promise((resolve) => {
+            image.onload = () => {
+              this.images.set(id, image);
+              resolve();
+            };
+            image.onerror = reject;
+          });
+
+          imagePromises.push(imagePromise);
+        }
+
+        this.objects.set(id, props);
+      });
+
+      if (imagePromises.length === 0) {
+        drawCanvas(
+          this.canvas,
+          this.objects,
+          this.ctx,
+          this.images,
+          this.defaultValues
+        );
+        resolve(objects);
+      } else {
+        Promise.all(imagePromises)
+          .then(() => {
+            drawCanvas(
+              this.canvas,
+              this.objects,
+              this.ctx,
+              this.images,
+              this.defaultValues
+            );
+            resolve(objects);
+          })
+          .catch(reject);
+      }
+    });
+  }
+
+  updateObject(id, updatedProps) {
+    return new Promise((resolve, reject) => {
+      if (id === null) return reject(Error(errorCodes.get(100)));
+      if (typeof updatedProps !== "object") return reject(Error(errorCodes.get(101)));
+
+      let object = this.objects.get(id);
+
+      if (!object) return reject(Error(errorCodes.get(106)));
+
+      let needsRedraw = false;
+
+      Object.entries(updatedProps).forEach(([key, value]) => {
+        if (key === "id") return reject(Error(errorCodes.get(111)));
+        if (key === "type") return reject(Error(errorCodes.get(112)));
+
+        if (key === "url") needsRedraw = true;
+
+        if (key === "path" && object.type === "path") {
+          const { width, height } = getPathProps(value);
+          if (!object.width) object.width = width;
+          if (!object.height) object.height = height;
+        }
+
+        object[key] = value;
+      });
+
+      if (object.type === "image" && needsRedraw) {
+        if (!object.url) return reject(Error(errorCodes.get(110)));
+
+        const image = new Image();
+        image.src = object.url;
+        image.onload = () => {
+          this.images.set(id, image);
+          drawCanvas(
+            this.canvas,
+            this.objects,
+            this.ctx,
+            this.images,
+            this.defaultValues
+          );
+          resolve(object);
+        };
+        image.onerror = reject;
+      } else {
+        drawCanvas(
+          this.canvas,
+          this.objects,
+          this.ctx,
+          this.images,
+          this.defaultValues
+        );
+        resolve(object);
+      }
+    });
+  }
+
+  getObject(id) {
+    if (id === null) throw Error(errorCodes.get(100));
+
+    let object = this.objects.get(id);
+
+    if (!object) throw Error(errorCodes.get(106));
+
+    return object;
+  }
+
+  getObjects() {
+    return sortByZIndex(this.objects.entries(), this.defaultValues).map(
+      ([id, object]) => ({ id, ...object })
+    );
+  }
+
+  deleteObject(id) {
+    this.objects.delete(id);
+    this.images.delete(id);
+    drawCanvas(
+      this.canvas,
+      this.objects,
+      this.ctx,
+      this.images,
+      this.defaultValues
+    );
+  }
+
+  moveObject(id, deltaX, deltaY, relative) {
+    if (id === null) throw Error(errorCodes.get(100));
+
+    let object = this.objects.get(id);
+
+    if (!object) throw Error(errorCodes.get(106));
+
+    if (object.type === "path") {
+      if (object.translate) {
+        if (relative === "relative") {
+          object.translate.x += deltaX;
+          object.translate.y += deltaY;
+        } else {
+          object.translate.x = deltaX;
+          object.translate.y = deltaY;
+        }
+      } else {
+        object.translate = { x: deltaX, y: deltaY };
+      }
+    } else {
+      if (relative === "relative") {
+        object.x = (object.x ?? 0) + deltaX;
+        object.y = (object.y ?? 0) + deltaY;
+      } else {
+        object.x = deltaX;
+        object.y = deltaY;
+      }
+    }
+
+    drawCanvas(
+      this.canvas,
+      this.objects,
+      this.ctx,
+      this.images,
+      this.defaultValues
+    );
+  }
+
+  clearCanvas() {
+    if (!this.canvas) throw Error(errorCodes.get(103));
+
+    this.objects.clear();
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  on(eventName, callback) {
+    if (typeof eventName !== "string") throw Error(errorCodes.get(104));
+    if (typeof callback !== "function") throw Error(errorCodes.get(105));
+    if (!this.canvas) throw Error(errorCodes.get(103));
+
+    let eventHandler = (event) => {
+      event.objects = sortByZIndex(this.objects.entries(), this.defaultValues)
+        .filter(([, { x, y, translate, width, height, type, text }]) => {
+          let clientX, clientY;
+
+          if (eventName.startsWith("touch")) {
+            if (eventName === "touchstart" && this.touch === null) {
+              this.touch = event.touches[0].identifier;
+            }
+
+            if (eventName === "touchend") {
+              if (this.touch !== event.changedTouches[0].identifier) {
+                return false;
+              }
+
+              clientX = event.changedTouches[0].clientX;
+              clientY = event.changedTouches[0].clientY;
+              this.touch = null;
+            } else {
+              if (this.touch !== event.changedTouches[0].identifier) {
+                return false;
+              }
+
+              clientX = event.touches[0].clientX;
+              clientY = event.touches[0].clientY;
+            }
+          } else {
+            clientX = event.offsetX;
+            clientY = event.offsetY;
+          }
+
+          if (translate) {
+            x = (translate.x ?? 0) + (x ?? 0);
+            y = (translate.y ?? 0) + (y ?? 0);
+          }
+
+          if (type === "text") {
+            if (text === null) throw Error(errorCodes.get(114));
+
+            let measure = this.ctx.measureText(text);
+            width = measure.width;
+            height =
+              measure.actualBoundingBoxAscent +
+              measure.actualBoundingBoxDescent;
+          } else if (type === "circle") {
+            return (
+              clientX >= x - width / 2 &&
+              clientX <= x + width / 2 &&
+              clientY >= y - height / 2 &&
+              clientY <= y + height / 2
+            );
+          }
+          return (
+            clientX >= x &&
+            clientX <= x + width &&
+            clientY >= y &&
+            clientY <= y + height
+          );
+        })
+        .map(([id, props]) => ({ id, ...props }));
+
+      callback(event);
+    };
+
+    this.canvas.addEventListener(eventName, eventHandler);
+
+    return () => {
+      this.canvas.removeEventListener(eventName, eventHandler);
+    };
+  }
+}
+
+function drawCanvas(canvas, objects, ctx, images, defaultValues) {
+  if (!canvas) throw Error(errorCodes.get(103));
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  sortByZIndex(objects.entries(), defaultValues).forEach(([id, object]) => {
+    const type = object.type || defaultValues.get("type");
+    if (!type) throw Error(errorCodes.get(109));
+
+    const x = object.x ?? defaultValues.get("x");
+    const y = object.y ?? defaultValues.get("y");
+    const text = object.text ?? defaultValues.get("text");
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = object.fill || defaultValues.get("fill");
+    ctx.strokeStyle = object.stroke?.fill || defaultValues.get("stroke").fill;
+    ctx.lineWidth = object.stroke?.width ?? defaultValues.get("stroke").width;
+    ctx.globalAlpha = object.opacity ?? defaultValues.get("opacity");
+
+    if (type === "text") {
+      if (text === null) throw Error(errorCodes.get(114));
+
+      let fontSize = object.font?.size ?? defaultValues.get("font").size;
+      let fontFamily = object.font?.family || defaultValues.get("font").family;
+      ctx.textBaseline = "top";
+      ctx.font = `${fontSize}px ${fontFamily}`;
+      ctx.fillText(text, x, y);
+
+      if (object.stroke && object.stroke.width && object.stroke.fill) {
+        ctx.strokeText(text, x, y);
+      }
+    } else {
+      let width = object.width ?? defaultValues.get("width");
+      let height = object.height ?? defaultValues.get("height");
+      let borderRadius =
+        object.borderRadius ?? defaultValues.get("borderRadius");
+      let translate = object.translate ?? defaultValues.get("translate");
+      let rotation = object.rotation ?? defaultValues.get("rotation");
+
+      if (rotation) {
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.translate(-x, -y);
+      }
+
+      if (translate && (translate.x || translate.y)) {
+        ctx.translate(translate.x, translate.y);
+      }
+
+      if (type === "custom") {
+        const { draw, ...props } = object;
+
+        if (!draw) throw Error(errorCodes.get(107));
+        if (typeof draw !== "function") throw Error(errorCodes.get(108));
+
+        draw(ctx, canvas, props);
+      } else if (type === "image") {
+        const image = images.get(id) || defaultValues.get("image");
+        if (image) ctx.drawImage(image, x, y, width, height);
+      } else if (type === "path") {
+        ctx.beginPath();
+        const path = object.path || defaultValues.get("path");
+        if (!path) throw Error(errorCodes.get(115));
+        const path2D = new Path2D(path);
+        ctx.fill(path2D);
+        if (object.stroke && object.stroke.width && object.stroke.fill)
+          ctx.stroke(path2D);
+        ctx.closePath();
+      } else if (type === "rectangle") {
+        ctx.beginPath();
+        ctx.moveTo(x + borderRadius, y);
+        ctx.lineTo(x + width - borderRadius, y);
+        ctx.arcTo(x + width, y, x + width, y + borderRadius, borderRadius);
+        ctx.lineTo(x + width, y + height - borderRadius);
+        ctx.arcTo(
+          x + width,
+          y + height,
+          x + width - borderRadius,
+          y + height,
+          borderRadius
+        );
+        ctx.lineTo(x + borderRadius, y + height);
+        ctx.arcTo(x, y + height, x, y + height - borderRadius, borderRadius);
+        ctx.lineTo(x, y + borderRadius);
+        ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+        ctx.fill();
+
+        if (object.stroke && object.stroke.width && object.stroke.fill)
+          ctx.stroke();
+
+        ctx.closePath();
+      } else if (type === "triangle") {
+        ctx.beginPath();
+        ctx.moveTo(x + borderRadius, y);
+        ctx.arcTo(x + width, y, x + width, y + height, borderRadius);
+        ctx.arcTo(x + width, y + height, x, y + height, borderRadius);
+        ctx.lineTo(x, y + borderRadius);
+        ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+        ctx.fill();
+
+        if (object.stroke && object.stroke.width && object.stroke.fill)
+          ctx.stroke();
+
+        ctx.closePath();
+      } else if (type === "circle") {
+        ctx.beginPath();
+        ctx.ellipse(x, y, width / 2, height / 2, 0, 0, 2 * Math.PI);
+        ctx.fill();
+
+        if (object.stroke && object.stroke.width && object.stroke.fill)
+          ctx.stroke();
+
+        ctx.closePath();
+      }
+    }
+  });
+}
+
+function sortByZIndex(objects, defaultValues) {
+  return [...objects].sort(([, object1], [, object2]) => {
+    let zIndex1 = object1.zIndex ?? defaultValues.get("zIndex");
+    let zIndex2 = object2.zIndex ?? defaultValues.get("zIndex");
+
+    if (zIndex1 === undefined && zIndex2 === undefined) {
+      return 0;
+    }
+
+    if (zIndex1 === undefined && zIndex2 > 0) {
+      return -1;
+    }
+
+    if (zIndex2 === undefined && zIndex1 > 0) {
+      return 1;
+    }
+
+    return zIndex1 - zIndex2;
+  });
+}
+
+function getPathProps(path) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const svgPath = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "path"
+  );
+  svgPath.setAttribute("d", path);
+  svg.appendChild(svgPath);
+  document.body.appendChild(svg);
+
+  const { width, height } = svgPath.getBoundingClientRect();
+
+  document.body.removeChild(svg);
+
+  return { width, height };
+}
