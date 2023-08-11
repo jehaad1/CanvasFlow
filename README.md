@@ -1,9 +1,9 @@
 <div align="center">
-<img height="500" src="https://github.com/jehaad1/CanvasFlow/blob/main/CanvasFlow.png?raw=true" />
+<img height="300px" src="https://github.com/jehaad1/CanvasFlow/blob/main/CanvasFlow.png?raw=true" />
   <h1>CanvasFlow</h1>
 </div>
 
-Welcome to the official documentation for CanvasFlow, a JavaScript library that empowers you to create and move objects on an HTML canvas with ease. This guide will walk you through the installation process, initialization, available methods, events, and different object types supported by CanvasFlow.
+Welcome to the CanvasFlow documentation, a JavaScript library that allow you to create and move objects on an HTML canvas with ease.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -12,7 +12,7 @@ Welcome to the official documentation for CanvasFlow, a JavaScript library that 
 - [Methods](#methods)
 - [Events](#events)
 - [Object Types](#object-types)
-- [Tips](#tips)
+- [Important Tips](#important-tips)
 
 ## Installation
 
@@ -328,7 +328,7 @@ const custom = {
 canvas.setObject(custom);
 ```
 
-## Tips
+## Important Tips
 
 Here are some tips to keep in mind while using CanvasFlow:
 
