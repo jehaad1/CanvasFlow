@@ -133,7 +133,7 @@ canvas.updateObject(1, {
 });
 ```
 #### Tips:
-- The object with the id "1" will be rendered firstly as a black square with length of 50/50 then rendered as a red square with length of 150/150.
+- The object with the id `1` will be rendered firstly as a black square with length of 50/50 then rendered as a red square with length of 150/150.
 - The `updateObject` method just replaces the exact properties of the object with the new properties that been provided. When using the `setObject` method to update the object, the object properties that not been provided with the new properties, will be deleted.
 
 ### getObject
@@ -141,8 +141,19 @@ To get and read an object properties and its position in the canvas, you can use
 ```js
 canvas.getObject(id);
 ```
+#### Returns `Object`
 Example:
 ```js
 const myFirstObject = canvas.getObject(1);
 ```
-#### Returns `Object`
+
+### getObjects
+To get all the objects in the canvas, you can use the `getObjects` method:
+```js
+canvas.getObjects();
+```
+#### Returns `[Object, Object, ...]`
+Example:
+```js
+const myObjects = canvas.getObjects();
+```
