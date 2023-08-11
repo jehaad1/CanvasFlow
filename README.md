@@ -49,7 +49,7 @@ import CanvasFlow from "canvasflow";
 
 2. Create a canvas element in your HTML:
 
-```js
+```html
 <canvas class="MyCanvas"></canvas>
 ```
 
