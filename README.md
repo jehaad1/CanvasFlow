@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/jehaad1/CanvasFlow/blob/main/CanvasFlow.png?raw=true" />
+<img height="500" src="https://github.com/jehaad1/CanvasFlow/blob/main/CanvasFlow.png?raw=true" />
   <h1>CanvasFlow</h1>
 </div>
 
