@@ -324,3 +324,21 @@ const custom = {
 
 canvas.setObject(custom);
 ```
+
+## Tips
+
+Here are some tips to keep in mind while using CanvasFlow:
+
+- When using the `setObject` method to create or update an object, any properties provided will override the default values. This allows you to easily customize individual objects on the canvas.
+
+- When using the `setObjects` method to create multiple objects, ensure that each object's `id` property is unique. Objects with the same `id` may overlap or cause unexpected behavior.
+
+- The `updateObject` method only replaces the exact properties provided with the new properties. If you use the `setObject` method to update an object, any properties not specified will be deleted from the object.
+
+- The `objects` property within the event object (`e`) contains an array of objects that the cursor is over when an event is fired. This is useful for event handling and interaction with specific objects on the canvas.
+
+- Event handling with CanvasFlow is done using the `on` method. Remember to call the returned function (e.g., `stopClickEvent()`) to stop listening to the event when it's no longer needed.
+
+- The `objects` property within the event object is sorted by z-index in descending order. This means that the first object in the array has the highest z-index value, and subsequent objects have lower z-index values.
+
+Keep these tips in mind to make the most of CanvasFlow's capabilities and enhance your canvas-based applications.
