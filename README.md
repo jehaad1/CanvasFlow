@@ -61,7 +61,11 @@ const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
 
 ## Methods
 ### setObject
-To create an object in the canvas you can use the "setObject" method:
+To create an object in the canvas you can use the `setObject` method:
+```js
+canvas.setObject(object);
+```
+Example:
 ```js
 const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
 canvas.setObject({
@@ -75,10 +79,14 @@ fill: "black"
 });
 ```
 #### Tips:
-- The "fill" property that been provided in the method will replace the default value (the rectangle will be black).
+- The `fill` property that been provided in the method will replace the default value (the rectangle will be black).
 
 ### setObjects
-To create multiple objects in the canvas you can use the "setObjects" method:
+To create multiple objects in the canvas you can use the `setObjects` method:
+```js
+canvas.setObjects([object, object, ...]);
+```
+Example:
 ```js
 canvas.setObjects({
 id: 1,
@@ -99,4 +107,42 @@ fill: "#ff0"
 });
 ```
 #### Tips:
-- The "id" property is must be unique or you'll overlap the old object that has the same id.
+- The `id` property is must be unique or you'll overlap the old object that has the same id.
+
+### updateObject
+To update an object properties in the canvas, you can use the `updateObject` method:
+```js
+canvas.updateObject(id, newProps);
+```
+Example:
+```js
+canvas.setObject({
+id: 1,
+type: "rectangle",
+x: 15,
+y: 15,
+width: 50,
+    height: 50,
+    fill: "black"
+});
+
+canvas.updateObject(1, {
+    width: 150,
+    height: 150,
+    fill: "red"
+});
+```
+#### Tips:
+- The object with the id "1" will be rendered firstly as a black square with length of 50/50 then rendered as a red square with length of 150/150.
+- The `updateObject` method just replaces the exact properties of the object with the new properties that been provided. When using the `setObject` method to update the object, the object properties that not been provided with the new properties, will be deleted.
+
+### getObject
+To get and read an object properties and its position in the canvas, you can use the `getObject` method:
+```js
+canvas.getObject(id);
+```
+Example:
+```js
+const myFirstObject = canvas.getObject(1);
+```
+#### Returns `Object`
