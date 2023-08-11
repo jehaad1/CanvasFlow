@@ -4,9 +4,9 @@
 CanvasFlow is a JavaScript library that provides high-level functions enabling you to draw, move, and delete objects on a canvas, along with many other functionalities.
 
 ## Refrences
-<a href="#Installation">Installation</a>
-<a href="#Canvas+Props">Canvas Props</a>
-<a href="#Methods">Methods</a>
+- <a href="#Installation">Installation</a>
+- <a href="#Canvas-Props">Canvas Props</a>
+- <a href="#Methods">Methods</a>
 
 ## Installation
 
@@ -74,4 +74,29 @@ height: 50,
 fill: "black"
 });
 ```
-In the example above, the "fill" property that been provided in the method will replace the default value (the rectangle will be black).
+#### Tips:
+- The "fill" property that been provided in the method will replace the default value (the rectangle will be black).
+
+### setObjects
+To create multiple objects in the canvas you can use the "setObjects" method:
+```js
+canvas.setObjects({
+id: 1,
+type: "rectangle",
+x: 15,
+y: 15,
+width: 50,
+height: 50,
+fill: "black"
+}, {
+id: 2,
+type: "circle",
+x: 30,
+y: 30,
+width: 50,
+height: 50,
+fill: "#ff0"
+});
+```
+#### Tips:
+- The "id" property is must be unique or you'll overlap the old object that has the same id.
