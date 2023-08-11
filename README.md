@@ -28,10 +28,16 @@ const canvas = new CanvasFlow(myCanvas);
 ```
 Finally, you're ready to start drawing over the canvas.
 
-## Props
+## Canvas Props
 You can give your canvas props when initializing it, and these props are optional.
 ```js
 const canvas = new CanvasFlow(myCanvas, { props });
 ```
 
-### Default Values Property
+### Default Values
+You can set up a default values for you canvas:
+```js
+const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
+```
+| Property | Type | Default Value | Description |
+| -------- | ---- | ------------- | ----------- |
