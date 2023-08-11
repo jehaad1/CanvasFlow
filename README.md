@@ -8,6 +8,7 @@ CanvasFlow is a JavaScript library that provides high-level functions enabling y
 - <a href="#Canvas-Props">Canvas Props</a>
 - <a href="#Methods">Methods</a>
 - <a href="#Events">Events</a>
+- <a href="#Object-Types">Object Types</a>
 
 ## Installation
 
@@ -201,3 +202,9 @@ const stopClickEvent = canvas.on("click", (e) => {
     stopClickEvent()
 });
 ```
+#### Tips:
+- The event object (`e`) has all the event properties with an extra property `objects`.
+- The `objects` property is an array of objects that the cursor been over them when the event been fired e.g. in the example above, it returns the objects that the cursor been over them when clicking the canvas.
+- The `objects` property sorted descending by the objects z-indexes.
+
+### Object Types
