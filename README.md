@@ -25,7 +25,7 @@ You can install CanvasFlow using either npm or by including it directly from a C
 
 To install CanvasFlow using npm, run the following command:
 
-```
+```bash
 npm install canvasflow
 ```
 
@@ -33,7 +33,7 @@ npm install canvasflow
 
 You can include CanvasFlow in your HTML file using the following CDN link:
 
-```
+```html
 <script src="https://unpkg.com/canvasflow@1.0.0/cdn.js"></script>
 ```
 
@@ -43,19 +43,19 @@ To get started with CanvasFlow, follow these steps:
 
 1. Import the `CanvasFlow` class:
 
-```
+```js
 import CanvasFlow from "canvasflow";
 ```
 
 2. Create a canvas element in your HTML:
 
-```
+```js
 <canvas class="MyCanvas"></canvas>
 ```
 
 3. Initialize CanvasFlow:
 
-```
+```js
 const myCanvas = document.querySelector("canvas.MyCanvas");
 const canvas = new CanvasFlow(myCanvas);
 ```
@@ -66,7 +66,7 @@ With these steps, you're ready to begin drawing on the canvas using CanvasFlow.
 
 When initializing the canvas, you can provide optional properties to customize its behavior. Here are the available properties:
 
-```
+```js
 const canvas = new CanvasFlow(myCanvas, {
   defaultValues: {
     fill: "green",
@@ -100,13 +100,13 @@ CanvasFlow provides various methods to interact with and manipulate objects on t
 
 Use the `setObject` method to create an object on the canvas:
 
-```
+```js
 canvas.setObject(object);
 ```
 
 Example:
 
-```
+```js
 const rectangle = {
     id: 1,
     type: "rectangle",
@@ -124,13 +124,13 @@ canvas.setObject(rectangle);
 
 The `setObjects` method allows you to create multiple objects on the canvas:
 
-```
+```js
 canvas.setObjects([object, object, ...]);
 ```
 
 Example:
 
-```
+```js
 const objects = [
     {
         id: 1,
@@ -159,13 +159,13 @@ canvas.setObjects(...objects);
 
 You can update an object's properties using the `updateObject` method:
 
-```
+```js
 canvas.updateObject(id, newProps);
 ```
 
 Example:
 
-```
+```js
 canvas.updateObject(1, {
     width: 150,
     height: 150,
@@ -177,7 +177,7 @@ canvas.updateObject(1, {
 
 Retrieve an object's properties and position using the `getObject` method:
 
-```
+```js
 const myObject = canvas.getObject(id);
 ```
 
@@ -185,7 +185,7 @@ const myObject = canvas.getObject(id);
 
 To get all objects on the canvas, use the `getObjects` method:
 
-```
+```js
 const allObjects = canvas.getObjects();
 ```
 
@@ -193,7 +193,7 @@ const allObjects = canvas.getObjects();
 
 The `deleteObject` method removes an object from the canvas:
 
-```
+```js
 canvas.deleteObject(id);
 ```
 
@@ -201,7 +201,7 @@ canvas.deleteObject(id);
 
 Move an object using the `moveObject` method:
 
-```
+```js
 canvas.moveObject(id, newX, newY, mode);
 ```
 
@@ -214,7 +214,7 @@ Modes:
 
 The `clearCanvas` method clears the canvas and removes all objects:
 
-```
+```js
 canvas.clearCanvas();
 ```
 
@@ -222,13 +222,13 @@ canvas.clearCanvas();
 
 CanvasFlow supports event handling using the `on` method:
 
-```
+```js
 const stopEvent = canvas.on(eventName, callback);
 ```
 
 Example:
 
-```
+```js
 const stopClickEvent = canvas.on("click", (e) => {
     console.log(e);
     stopClickEvent();
@@ -241,7 +241,7 @@ CanvasFlow supports various object types:
 
 ### Rectangle Object
 
-```
+```js
 const rectangle = {
     type: "rectangle",
     fill: "black",
@@ -254,7 +254,7 @@ canvas.setObject(rectangle);
 
 ### Triangle Object
 
-```
+```js
 const triangle = {
     type: "triangle",
     fill: "blue",
@@ -267,7 +267,7 @@ canvas.setObject(triangle);
 
 ### Circle Object
 
-```
+```js
 const circle = {
     type: "circle",
     fill: "green",
@@ -280,7 +280,7 @@ canvas.setObject(circle);
 
 ### Text Object
 
-```
+```js
 const text = {
     type: "text",
     text: "Hello World!",
@@ -296,7 +296,7 @@ canvas.setObject(text);
 
 ### Image Object
 
-```
+```js
 const image = {
     type: "image",
     url: "./MyImage.png",
@@ -309,7 +309,7 @@ canvas.setObject(image);
 
 ### Path Object
 
-```
+```js
 const path = {
     type: "path",
     path: "M150 0 L75 200 L225 200 Z",
@@ -321,7 +321,7 @@ canvas.setObject(path);
 
 ### Custom Object
 
-```
+```js
 const custom = {
     type: "custom",
     draw: function(ctx, canvas, props) { /* drawing a custom object */ },
