@@ -29,7 +29,7 @@ export default class CanvasFlow {
     ["width", 0],
     ["height", 0],
     ["borderRadius", 0],
-    ["rotation", "black"],
+    ["rotation", 0],
     ["opacity", 1],
     ["zIndex", 0],
     ["translate", { x: 0, y: 0 }],
