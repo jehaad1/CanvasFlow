@@ -23,11 +23,11 @@ export default class CanvasFlow {
   defaultValues = new Map([
     ["x", 0],
     ["y", 0],
+    ["width", 0],
+    ["height", 0],
     ["fill", "black"],
     ["stroke", { fill: "black", width: 0 }],
     ["font", { family: "sans-serif", size: 10 }],
-    ["width", 0],
-    ["height", 0],
     ["borderRadius", 0],
     ["rotation", 0],
     ["opacity", 1],
@@ -434,7 +434,7 @@ function drawCanvas(canvas, objects, ctx, images, defaultValues) {
 
         draw(ctx, canvas, props);
       } else if (type === "image") {
-        const image = images.get(id) || defaultValues.get("image");
+        const image = images.get(id);
         if (image) ctx.drawImage(image, x, y, width, height);
       } else if (type === "path") {
         ctx.beginPath();
