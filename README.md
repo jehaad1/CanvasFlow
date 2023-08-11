@@ -1,76 +1,107 @@
-# CanvasFlow
+# CanvasFlow Documentation
 
-## What's CanvasFlow?
-CanvasFlow is a JavaScript library that provides high-level functions enabling you to draw, move, and delete objects on a canvas, along with many other functionalities.
+Welcome to the official documentation for CanvasFlow, a JavaScript library that empowers you to create and manipulate objects on an HTML canvas with ease. This guide will walk you through the installation process, initialization, available methods, events, and different object types supported by CanvasFlow.
 
-## Refrences
-- <a href="#Installation">Installation</a>
-- <a href="#Canvas-Props">Canvas Props</a>
-- <a href="#Methods">Methods</a>
-- <a href="#Events">Events</a>
-- <a href="#Object-Types">Object Types</a>
+## Table of Contents
+- [Installation](#installation)
+- [Initialization](#initialization)
+- [Canvas Properties](#canvas-properties)
+- [Methods](#methods)
+- [Events](#events)
+- [Object Types](#object-types)
+- [Tips](#tips)
 
 ## Installation
 
-ES Module Installation:
-```js
-npm i canvasflow
+You can install CanvasFlow using either npm or by including it directly from a CDN.
+
+### npm Installation
+
+To install CanvasFlow using npm, run the following command:
+
+```
+npm install canvasflow
 ```
 
-CDN Installation:
-```html
+### CDN Installation
+
+You can include CanvasFlow in your HTML file using the following CDN link:
+
+```
 <script src="https://unpkg.com/canvasflow@1.0.0"></script>
 ```
 
 ## Initialization
-First, import the "CanvasFlow" class from the library:
-```js
+
+To get started with CanvasFlow, follow these steps:
+
+1. Import the `CanvasFlow` class:
+
+```
 import CanvasFlow from "canvasflow";
 ```
-Second, create your canvas:
-```js
-const myCanvas = document.querySelector("canvas.MyCanvas");
 
+2. Create a canvas element in your HTML:
+
+```
+<canvas class="MyCanvas"></canvas>
+```
+
+3. Initialize CanvasFlow:
+
+```
+const myCanvas = document.querySelector("canvas.MyCanvas");
 const canvas = new CanvasFlow(myCanvas);
 ```
-Finally, you're ready to start drawing over the canvas.
 
-## Canvas Props
-You can give your canvas props when initializing it, and these props are optional.
-```js
-const canvas = new CanvasFlow(myCanvas, { props });
+With these steps, you're ready to begin drawing on the canvas using CanvasFlow.
+
+## Canvas Properties
+
+When initializing the canvas, you can provide optional properties to customize its behavior. Here are the available properties:
+
+```
+const canvas = new CanvasFlow(myCanvas, {
+  defaultValues: {
+    fill: "green",
+    // Other default property values...
+  },
+});
 ```
 
-### Default Values
-You can set up default values for you canvas:
-```js
-const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
-```
-| Property | Type | Default Value | Description |
-| -------- | ---- | ------------- | ----------- |
-| x | Number | 0 | Sets the default x position of the objects on the canvas |
-| y | Number | 0 | Sets the default y position of the objects on the canvas |
-| width | Number | 0 | Sets the default width of the objects on the canvas |
-| height | Number | 0 | Sets the default height of the objects on the canvas |
-| fill | String | "black" | Sets the default background color of the objects on the canvas |
-| stroke | Object | { fill: "black", width: 0 } | Sets the default stroke of the objects on the canvas |
-| font | Object | { family: "sans-serif", size: 10 } | Sets the default font of the text objects on the canvas |
-| borderRadius | Number | 0 | Sets the default border radius of the objects on the canvas |
-| rotation | Number | 0 | Sets the default rotation of the objects on the canvas |
-| opacity | Number | 1 | Sets the default opacity of the objects on the canvas |
-| zIndex | Number | 0 | Sets the default z-index of the objects on the canvas |
-| translate | Object | { x: 0, y: 0 } | Sets the default translate position of the objects on the canvas |
+The following table lists the available canvas properties and their descriptions:
+
+| Property     | Type   | Default Value | Description                                      |
+| ------------ | ------ | ------------- | ------------------------------------------------ |
+| x            | Number | 0             | Default x position of objects on the canvas     |
+| y            | Number | 0             | Default y position of objects on the canvas     |
+| width        | Number | 0             | Default width of objects on the canvas          |
+| height       | Number | 0             | Default height of objects on the canvas         |
+| fill         | String | "black"       | Default background color of objects on the canvas |
+| stroke       | Object | { fill: "black", width: 0 } | Default stroke properties of objects on the canvas |
+| font         | Object | { family: "sans-serif", size: 10 } | Default font properties of text objects on the canvas |
+| borderRadius | Number | 0             | Default border radius of objects on the canvas  |
+| rotation     | Number | 0             | Default rotation of objects on the canvas       |
+| opacity      | Number | 1             | Default opacity of objects on the canvas        |
+| zIndex       | Number | 0             | Default z-index of objects on the canvas        |
+| translate    | Object | { x: 0, y: 0 } | Default translate position of objects on the canvas |
 
 ## Methods
+
+CanvasFlow provides various methods to interact with and manipulate objects on the canvas.
+
 ### setObject
-To create an object in the canvas you can use the `setObject` method:
-```js
+
+Use the `setObject` method to create an object on the canvas:
+
+```
 canvas.setObject(object);
 ```
+
 Example:
-```js
-const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
-canvas.setObject({
+
+```
+const rectangle = {
     id: 1,
     type: "rectangle",
     x: 15,
@@ -78,133 +109,218 @@ canvas.setObject({
     width: 50,
     height: 50,
     fill: "black"
-});
+};
+
+canvas.setObject(rectangle);
 ```
-#### Tips:
-- The `fill` property that been provided in the method will replace the default value (the rectangle will be black).
 
 ### setObjects
-To create multiple objects in the canvas you can use the `setObjects` method:
-```js
+
+The `setObjects` method allows you to create multiple objects on the canvas:
+
+```
 canvas.setObjects([object, object, ...]);
 ```
+
 Example:
-```js
-canvas.setObjects({
-    id: 1,
-    type: "rectangle",
-    x: 15,
-    y: 15,
-    width: 50,
-    height: 50,
-    fill: "black"
-}, {
-    id: 2,
-    type: "circle",
-    x: 30,
-    y: 30,
-    width: 50,
-    height: 50,
-    fill: "#ff0"
-});
+
 ```
-#### Tips:
-- The `id` property is must be unique or you'll overlap the old object that has the same id.
+const objects = [
+    {
+        id: 1,
+        type: "rectangle",
+        x: 15,
+        y: 15,
+        width: 50,
+        height: 50,
+        fill: "black"
+    },
+    {
+        id: 2,
+        type: "circle",
+        x: 30,
+        y: 30,
+        width: 50,
+        height: 50,
+        fill: "#ff0"
+    }
+];
+
+canvas.setObjects(...objects);
+```
 
 ### updateObject
-To update an object properties in the canvas, you can use the `updateObject` method:
-```js
+
+You can update an object's properties using the `updateObject` method:
+
+```
 canvas.updateObject(id, newProps);
 ```
-Example:
-```js
-canvas.setObject({
-    id: 1,
-    type: "rectangle",
-    x: 15,
-    y: 15,
-    width: 50,
-    height: 50,
-    fill: "black"
-});
 
+Example:
+
+```
 canvas.updateObject(1, {
     width: 150,
     height: 150,
     fill: "red"
 });
 ```
-#### Tips:
-- The object with the id `1` will be rendered firstly as a black square with length of 50/50 then rendered as a red square with length of 150/150.
-- The `updateObject` method just replaces the exact properties of the object with the new properties that been provided. When using the `setObject` method to update the object, the object properties that not been provided with the new properties, will be deleted.
 
 ### getObject
-To get and read an object properties and its position in the canvas, you can use the `getObject` method:
-```js
-canvas.getObject(id);
+
+Retrieve an object's properties and position using the `getObject` method:
+
 ```
-#### Returns `Object`
-Example:
-```js
-const myFirstObject = canvas.getObject(1);
+const myObject = canvas.getObject(id);
 ```
 
 ### getObjects
-To get all the objects in the canvas, you can use the `getObjects` method:
-```js
-canvas.getObjects();
+
+To get all objects on the canvas, use the `getObjects` method:
+
 ```
-#### Returns `[Object, Object, ...]`
-Example:
-```js
-const myObjects = canvas.getObjects();
+const allObjects = canvas.getObjects();
 ```
 
 ### deleteObject
-To delete an object from the canvas, you can use the `deleteObject` method:
-```js
+
+The `deleteObject` method removes an object from the canvas:
+
+```
 canvas.deleteObject(id);
 ```
-Example:
-```js
-canvas.deleteObject(1);
-```
-This will delete the object from the canvas and never been re-rendered.
 
 ### moveObject
-To move an object in the canvas, you can use the `moveObject` method:
-```js
+
+Move an object using the `moveObject` method:
+
+```
 canvas.moveObject(id, newX, newY, mode);
 ```
-Example:
-```js
-canvas.moveObject(1, 30, 30, "relative");
-```
-| Mode | Description |
-| ---- | ----------- |
-| Absolute (Default) | Moving the object to the new x and new y position |
-| Relative | Moving the object to the new x and new y position from the current position |
+
+Modes:
+
+- Absolute (Default): Move object to new x and y positions.
+- Relative: Move object from current position to new x and y positions.
+
 ### clearCanvas
-To clear the canvas and deleting all the objects, you can use the `clearCanvas` method:
+
+The `clearCanvas` method clears the canvas and removes all objects:
+
 ```
 canvas.clearCanvas();
 ```
+
 ## Events
-To listen to any event, you can use the `on` method:
-```js
-canvas.on(eventName, callback);
+
+CanvasFlow supports event handling using the `on` method:
+
 ```
-#### Returns `stopEvent()`
+const stopEvent = canvas.on(eventName, callback);
+```
+
 Example:
-```js
+
+```
 const stopClickEvent = canvas.on("click", (e) => {
     console.log(e);
-    stopClickEvent()
+    stopClickEvent();
 });
 ```
-#### Tips:
-- The event object (`e`) has all the event properties with an extra property `objects`.
-- The `objects` property is an array of objects that the cursor been over them when the event been fired e.g. in the example above, it returns the objects that the cursor been over them when clicking the canvas.
-- The `objects` property sorted descending by the objects z-indexes.
 
-### Object Types
+## Object Types
+
+CanvasFlow supports various object types:
+
+### Rectangle Object
+
+```
+const rectangle = {
+    type: "rectangle",
+    fill: "black",
+    width: 50,
+    height: 50
+};
+
+canvas.setObject(rectangle);
+```
+
+### Triangle Object
+
+```
+const triangle = {
+    type: "triangle",
+    fill: "blue",
+    width: 70,
+    height: 70
+};
+
+canvas.setObject(triangle);
+```
+
+### Circle Object
+
+```
+const circle = {
+    type: "circle",
+    fill: "green",
+    width: 70,
+    height: 70
+};
+
+canvas.setObject(circle);
+```
+
+### Text Object
+
+```
+const text = {
+    type: "text",
+    text: "Hello World!",
+    font: {
+        family: "Arial",
+        size: 24
+    },
+    fill: "black"
+};
+
+canvas.setObject(text);
+```
+
+### Image Object
+
+```
+const image = {
+    type: "image",
+    url: "./MyImage.png",
+    width: 200,
+    height: 200
+};
+
+canvas.setObject(image);
+```
+
+### Path Object
+
+```
+const path = {
+    type: "path",
+    path: "M150 0 L75 200 L225 200 Z",
+    fill: "black"
+};
+
+canvas.setObject(path);
+```
+
+### Custom Object
+
+```
+const custom = {
+    type: "custom",
+    draw: function(ctx, canvas, props) { /* drawing a custom object */ },
+    fill: "black"
+};
+
+canvas.setObject(custom);
+```
