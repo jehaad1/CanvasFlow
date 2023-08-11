@@ -1,6 +1,6 @@
 # CanvasFlow Documentation
 
-Welcome to the official documentation for CanvasFlow, a JavaScript library that empowers you to create and manipulate objects on an HTML canvas with ease. This guide will walk you through the installation process, initialization, available methods, events, and different object types supported by CanvasFlow.
+Welcome to the official documentation for CanvasFlow, a JavaScript library that empowers you to create and move objects on an HTML canvas with ease. This guide will walk you through the installation process, initialization, available methods, events, and different object types supported by CanvasFlow.
 
 ## Table of Contents
 - [Installation](#installation)
