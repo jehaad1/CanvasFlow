@@ -70,13 +70,13 @@ Example:
 ```js
 const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
 canvas.setObject({
-id: 1,
-type: "rectangle",
-x: 15,
-y: 15,
-width: 50,
-height: 50,
-fill: "black"
+    id: 1,
+    type: "rectangle",
+    x: 15,
+    y: 15,
+    width: 50,
+    height: 50,
+    fill: "black"
 });
 ```
 #### Tips:
@@ -90,21 +90,21 @@ canvas.setObjects([object, object, ...]);
 Example:
 ```js
 canvas.setObjects({
-id: 1,
-type: "rectangle",
-x: 15,
-y: 15,
-width: 50,
-height: 50,
-fill: "black"
+    id: 1,
+    type: "rectangle",
+    x: 15,
+    y: 15,
+    width: 50,
+    height: 50,
+    fill: "black"
 }, {
-id: 2,
-type: "circle",
-x: 30,
-y: 30,
-width: 50,
-height: 50,
-fill: "#ff0"
+    id: 2,
+    type: "circle",
+    x: 30,
+    y: 30,
+    width: 50,
+    height: 50,
+    fill: "#ff0"
 });
 ```
 #### Tips:
@@ -118,11 +118,11 @@ canvas.updateObject(id, newProps);
 Example:
 ```js
 canvas.setObject({
-id: 1,
-type: "rectangle",
-x: 15,
-y: 15,
-width: 50,
+    id: 1,
+    type: "rectangle",
+    x: 15,
+    y: 15,
+    width: 50,
     height: 50,
     fill: "black"
 });
@@ -197,7 +197,7 @@ canvas.on(eventName, callback)
 Example:
 ```js
 const stopClickEvent = canvas.on("click", (e) => {
-console.log(e);
-stopClickEvent()
+    console.log(e);
+    stopClickEvent()
 });
 ```
