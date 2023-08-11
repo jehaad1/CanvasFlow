@@ -6,7 +6,7 @@
 Welcome to the CanvasFlow documentation, a JavaScript library that allow you to create and move objects on an HTML canvas with ease.
 
 ## Online Demos:
-- [Kashkol](https://kashkol.jehaad.com)
+- <a target="_blank" href="https://kashkol.jehaad.com">kashkol</a>
 
 ## Table of Contents
 - [Installation](#installation)
