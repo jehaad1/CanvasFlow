@@ -3,6 +3,11 @@
 ## What's CanvasFlow?
 CanvasFlow is a JavaScript library that provides high-level functions enabling you to draw, move, and delete objects on a canvas, along with many other functionalities.
 
+## Refrences
+<a href="#Installation">Installation</a>
+<a href="#Canvas+Props">Canvas Props</a>
+<a href="#Methods">Methods</a>
+
 ## Installation
 
 ES Module Installation:
@@ -35,7 +40,7 @@ const canvas = new CanvasFlow(myCanvas, { props });
 ```
 
 ### Default Values
-You can set up a default values for you canvas:
+You can set up default values for you canvas:
 ```js
 const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
 ```
@@ -53,3 +58,20 @@ const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
 | opacity | Number | 1 | Sets the default opacity of the objects on the canvas |
 | zIndex | Number | 0 | Sets the default z-index of the objects on the canvas |
 | translate | Object | { x: 0, y: 0 } | Sets the default translate position of the objects on the canvas |
+
+## Methods
+### setObject
+To create an object in the canvas you can use the "setObject" method:
+```js
+const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
+canvas.setObject({
+id: 1,
+type: "rectangle",
+x: 15,
+y: 15,
+width: 50,
+height: 50,
+fill: "black"
+});
+```
+In the example above, the "fill" property that been provided in the method will replace the default value (the rectangle will be black).
