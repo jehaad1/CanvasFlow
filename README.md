@@ -1,4 +1,7 @@
-# CanvasFlow Documentation
+<div align="center">
+<img src="https://github.com/jehaad1/CanvasFlow/blob/main/CanvasFlow.png?raw=true" />
+  <h1>CanvasFlow</h1>
+</div>
 
 Welcome to the official documentation for CanvasFlow, a JavaScript library that empowers you to create and move objects on an HTML canvas with ease. This guide will walk you through the installation process, initialization, available methods, events, and different object types supported by CanvasFlow.
 
