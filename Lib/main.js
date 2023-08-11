@@ -172,7 +172,8 @@ export default class CanvasFlow {
   updateObject(id, updatedProps) {
     return new Promise((resolve, reject) => {
       if (id === null) return reject(Error(errorCodes.get(100)));
-      if (typeof updatedProps !== "object") return reject(Error(errorCodes.get(101)));
+      if (typeof updatedProps !== "object")
+        return reject(Error(errorCodes.get(101)));
 
       let object = this.objects.get(id);
 
