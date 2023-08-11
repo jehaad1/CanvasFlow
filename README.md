@@ -191,7 +191,7 @@ canvas.clearCanvas();
 ## Events
 To listen to any event, you can use the `on` method:
 ```js
-canvas.on(eventName, callback)
+canvas.on(eventName, callback);
 ```
 #### Returns `stopEvent()`
 Example:
