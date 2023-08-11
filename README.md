@@ -41,3 +41,15 @@ const canvas = new CanvasFlow(myCanvas, { defaultValues: { fill: "green" } });
 ```
 | Property | Type | Default Value | Description |
 | -------- | ---- | ------------- | ----------- |
+| x | Number | 0 | Sets the default x position of the objects on the canvas |
+| y | Number | 0 | Sets the default y position of the objects on the canvas |
+| width | Number | 0 | Sets the default width of the objects on the canvas |
+| height | Number | 0 | Sets the default height of the objects on the canvas |
+| fill | String | "black" | Sets the default background color of the objects on the canvas |
+| stroke | Object | { fill: "black", width: 0 } | Sets the default stroke of the objects on the canvas |
+| font | Object | { family: "sans-serif", size: 10 } | Sets the default font of the text objects on the canvas |
+| borderRadius | Number | 0 | Sets the default border radius of the objects on the canvas |
+| rotation | Number | 0 | Sets the default rotation of the objects on the canvas |
+| opacity | Number | 1 | Sets the default opacity of the objects on the canvas |
+| zIndex | Number | 0 | Sets the default z-index of the objects on the canvas |
+| translate | Object | { x: 0, y: 0 } | Sets the default translate position of the objects on the canvas |
