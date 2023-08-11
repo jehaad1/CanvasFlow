@@ -7,6 +7,7 @@ CanvasFlow is a JavaScript library that provides high-level functions enabling y
 - <a href="#Installation">Installation</a>
 - <a href="#Canvas-Props">Canvas Props</a>
 - <a href="#Methods">Methods</a>
+- <a href="#Events">Events</a>
 
 ## Installation
 
@@ -156,4 +157,47 @@ canvas.getObjects();
 Example:
 ```js
 const myObjects = canvas.getObjects();
+```
+
+### deleteObject
+To delete an object from the canvas, you can use the `deleteObject` method:
+```js
+canvas.deleteObject(id);
+```
+Example:
+```js
+canvas.deleteObject(1);
+```
+This will delete the object from the canvas and never been re-rendered.
+
+### moveObject
+To move an object in the canvas, you can use the `moveObject` method:
+```js
+canvas.moveObject(id, newX, newY, mode);
+```
+Example:
+```js
+canvas.moveObject(1, 30, 30, "relative");
+```
+| Mode | Description |
+| ---- | ----------- |
+| Absolute (Default) | Moving the object to the new x and new y position |
+| Relative | Moving the object to the new x and new y position from the current position |
+### clearCanvas
+To clear the canvas and deleting all the objects, you can use the `clearCanvas` method:
+```
+canvas.clearCanvas();
+```
+## Events
+To listen to any event, you can use the `on` method:
+```js
+canvas.on(eventName, callback)
+```
+#### Returns `stopEvent()`
+Example:
+```js
+const stopClickEvent = canvas.on("click", (e) => {
+console.log(e);
+stopClickEvent()
+});
 ```
