@@ -238,19 +238,19 @@ canvas.clearCanvas();
 ```
 ## Chunks (Erasing)
 
-Chunks are parts in the canvas viewport that can't display anything under them, and can't be moved.
+Chunks represent transparent areas within the canvas viewport. They act as regions of erasure, where nothing is displayed underneath, and they remain fixed in position.
 
 ### setChunk
 
 Use the `setChunk` method to create a chunk on the canvas:
 
-```
+```js
 canvas.setChunk(chunk);
 ```
 
 Example:
 
-```
+```js
 const rectangle = {
     type: "rectangle",
     fill: "purple",
@@ -260,16 +260,18 @@ const rectangle = {
 
 canvas.setObject(rectangle);
 
-canvas.setChunk({
+const chunk = {
     id: Math.random(),
     x: 10,
     y: 10,
     width: 30,
     height: 30
-});
+};
+
+canvas.setChunk(chunk);
 ```
 
-![Example Image](./Examples/Example13.png)
+<img src="./Examples/Example13.png" />
 
 ### getChunks
 
@@ -311,6 +313,7 @@ const chunk = {
 
 canvas.setChunk(chunk);
 ```
+<img src="./Examples/Example13.png" />
 
 ### Circular Chunk
 
@@ -324,6 +327,7 @@ const chunk = {
 
 canvas.setChunk(chunk);
 ```
+<img src="./Examples/Example14.png" />
 
 ### Path Chunk
 
@@ -335,6 +339,7 @@ const chunk = {
 
 canvas.setChunk(chunk);
 ```
+<img src="./Examples/Example15.png" />
 
 ## Events
 
