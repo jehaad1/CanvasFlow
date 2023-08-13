@@ -206,7 +206,7 @@ Example:
 ```js
 canvas.deleteObject(1);
 ```
-<img src="./Examples/Example4.png" />
+<img src="./Examples/Example12.png" />
 
 ### moveObject
 
