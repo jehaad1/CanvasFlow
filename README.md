@@ -14,6 +14,7 @@ Welcome to the CanvasFlow documentation, a JavaScript library that allow you to 
 - [Canvas Properties](#canvas-properties)
 - [Methods](#methods)
 - [Chunks (Erasing)](#chunks-erasing)
+- [Chunk Types](#chunk-types)
 - [Events](#events)
 - [Object Types](#object-types)
 - [Important Tips](#important-tips)
@@ -320,8 +321,8 @@ canvas.setChunk(chunk);
 ```js
 const chunk = {
     type: "circle",
-    x: 10,
-    y: 10,
+    x: 40,
+    y: 40,
     radius: 50
 };
 
