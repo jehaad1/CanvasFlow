@@ -13,7 +13,7 @@ Welcome to the CanvasFlow documentation, a JavaScript library that allow you to 
 - [Initialization](#initialization)
 - [Canvas Properties](#canvas-properties)
 - [Methods](#methods)
-- [Chunks (Erasing)](#chunks-(erasing))
+- [Chunks (Erasing)](#chunks-erasing)
 - [Events](#events)
 - [Object Types](#object-types)
 - [Important Tips](#important-tips)
