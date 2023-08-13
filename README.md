@@ -35,7 +35,7 @@ npm install canvasflow
 You can include CanvasFlow in your HTML file using the following CDN link:
 
 ```html
-<script src="https://unpkg.com/canvasflow@1.1.0/lib.js"></script>
+<script src="https://unpkg.com/canvasflow@1.2.0/lib.js"></script>
 ```
 
 ## Initialization
@@ -238,6 +238,33 @@ canvas.clearCanvas();
 ```
 
 ## Chunks (Erasing)
+Chunks are parts in the canvas viewport that can't displays nothing under it, and can't be moved.
+
+### setChunk
+Use the `setChunk` method to create a chunk on the canvas:
+```js
+canvas.setChunk(chunk);
+```
+Example:
+```js
+const rectangle = {
+    type: "rectangle",
+    fill: "purple",
+    width: 75,
+    height: 75
+};
+
+canvas.setObject(rectangle);
+
+canvas.setChunk({
+id: Math.random(),
+x: 10,
+y: 10,
+width: 30,
+height: 30
+})
+```
+<img src="./Examples/Example13.png" />
 
 ## Events
 
