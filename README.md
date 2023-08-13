@@ -163,7 +163,7 @@ canvas.setObjects(objects);
 You can update an object's properties using the `updateObject` method:
 
 ```js
-canvas.updateObject(id, newProps);
+canvas.updateObject(objectId, newProps);
 ```
 
 Example:
@@ -182,7 +182,7 @@ canvas.updateObject(1, {
 Retrieve an object's properties and position using the `getObject` method:
 
 ```js
-const myObject = canvas.getObject(id);
+const myObject = canvas.getObject(objectId);
 ```
 
 ### getObjects
@@ -198,16 +198,30 @@ const allObjects = canvas.getObjects();
 The `deleteObject` method removes an object from the canvas:
 
 ```js
-canvas.deleteObject(id);
+canvas.deleteObject(objectId);
 ```
+
+Example:
+
+```js
+canvas.deleteObject(1);
+```
+<img src="./Examples/Example4.png" />
 
 ### moveObject
 
 Move an object using the `moveObject` method:
 
 ```js
-canvas.moveObject(id, newX, newY, mode);
+canvas.moveObject(objectId, newX, newY, mode);
 ```
+
+Example:
+
+```js
+canvas.moveObject(2, 70, 20, "relative");
+```
+<img src="./Examples/Example11.png" />
 
 Modes:
 
@@ -221,7 +235,6 @@ The `clearCanvas` method clears the canvas and removes all objects:
 ```js
 canvas.clearCanvas();
 ```
-<img src="./Examples/Example4.png" />
 
 ## Events
 
