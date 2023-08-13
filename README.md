@@ -237,6 +237,8 @@ The `clearCanvas` method clears the canvas and removes all objects:
 canvas.clearCanvas();
 ```
 
+## Chunks (Erasing)
+
 ## Events
 
 CanvasFlow supports event handling using the `on` method:
