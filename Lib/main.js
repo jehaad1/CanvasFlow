@@ -339,7 +339,10 @@ export default class CanvasFlow {
   }
 
   getChunks() {
-    return [...this.chunks.entries()].map(([id, object]) => ({ id, ...object }));
+    return [...this.chunks.entries()].map(([id, object]) => ({
+      id,
+      ...object,
+    }));
   }
 
   clearChunks() {
@@ -493,7 +496,7 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
         if (image) ctx.drawImage(image, x, y, width, height);
       } else if (type === "path") {
         ctx.beginPath();
-        const path = object.path || defaultValues.get("path");
+        const path = object.path;
         if (!path) throw Error(errorCodes.get(115));
         const path2D = new Path2D(path);
         ctx.fill(path2D);
@@ -550,13 +553,21 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
   });
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   [...chunks.values()].forEach(
-    ({ x, y, width, height, radius, isCircular }) => {
-      if (!isCircular) return ctx.clearRect(x, y, width, height);
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath();
-      ctx.arc(x, y, radius / 2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalCompositeOperation = "source-over";
+    ({ x, y, width, height, radius, path, type }) => {
+      if (type === "circle") {
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.beginPath();
+        ctx.arc(x, y, radius / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalCompositeOperation = "source-over";
+      } else if (type === "path") {
+        ctx.save();
+        ctx.clip(new Path2D(path));
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+      } else {
+        ctx.clearRect(x, y, width, height);
+      }
     }
   );
 }
