@@ -120,6 +120,8 @@ const rectangle = {
 canvas.setObject(rectangle);
 ```
 
+<img src="./Examples/Example1.png" />
+
 ### setObjects
 
 The `setObjects` method allows you to create multiple objects on the canvas:
@@ -154,6 +156,7 @@ const objects = [
 
 canvas.setObjects(objects);
 ```
+<img src="./Examples/Example2.png" />
 
 ### updateObject
 
@@ -172,6 +175,7 @@ canvas.updateObject(1, {
     fill: "red"
 });
 ```
+<img src="./Examples/Example3.png" />
 
 ### getObject
 
@@ -217,6 +221,7 @@ The `clearCanvas` method clears the canvas and removes all objects:
 ```js
 canvas.clearCanvas();
 ```
+<img src="./Examples/Example4.png" />
 
 ## Events
 
@@ -251,6 +256,7 @@ const rectangle = {
 
 canvas.setObject(rectangle);
 ```
+<img src="./Examples/Example5.png" />
 
 ### Triangle Object
 
@@ -264,6 +270,7 @@ const triangle = {
 
 canvas.setObject(triangle);
 ```
+<img src="./Examples/Example6.png" />
 
 ### Circle Object
 
@@ -279,6 +286,7 @@ const circle = {
 
 canvas.setObject(circle);
 ```
+<img src="./Examples/Example7.png" />
 
 ### Text Object
 
@@ -296,6 +304,7 @@ const text = {
 
 canvas.setObject(text);
 ```
+<img src="./Examples/Example8.png" />
 
 ### Image Object
 
@@ -309,6 +318,7 @@ const image = {
 
 canvas.setObject(image);
 ```
+<img src="./Examples/Example10.png" />
 
 ### Path Object
 
@@ -321,6 +331,7 @@ const path = {
 
 canvas.setObject(path);
 ```
+<img src="./Examples/Example9.png" />
 
 ### Custom Object
 
