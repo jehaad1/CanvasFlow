@@ -144,15 +144,15 @@ const objects = [
     {
         id: 2,
         type: "circle",
-        x: 30,
-        y: 30,
+        x: 100,
+        y: 100,
         width: 50,
         height: 50,
         fill: "#ff0"
     }
 ];
 
-canvas.setObjects(...objects);
+canvas.setObjects(objects);
 ```
 
 ### updateObject
@@ -270,7 +270,9 @@ canvas.setObject(triangle);
 ```js
 const circle = {
     type: "circle",
-    fill: "green",
+    fill: "#333",
+    x: 60,
+    y: 60,
     width: 70,
     height: 70
 };
@@ -283,6 +285,7 @@ canvas.setObject(circle);
 ```js
 const text = {
     type: "text",
+    x: 50,
     text: "Hello World!",
     font: {
         family: "Arial",
