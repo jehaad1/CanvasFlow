@@ -19,6 +19,7 @@ const errorCodes = new Map([
 
 export default class CanvasFlow {
   objects = new Map();
+  chunks = new Map();
   images = new Map();
   defaultValues = new Map([
     ["x", 0],
@@ -83,6 +84,7 @@ export default class CanvasFlow {
           drawCanvas(
             this.canvas,
             this.objects,
+            this.chunks,
             this.ctx,
             this.images,
             this.defaultValues
@@ -94,6 +96,7 @@ export default class CanvasFlow {
         drawCanvas(
           this.canvas,
           this.objects,
+          this.chunks,
           this.ctx,
           this.images,
           this.defaultValues
@@ -147,6 +150,7 @@ export default class CanvasFlow {
         drawCanvas(
           this.canvas,
           this.objects,
+          this.chunks,
           this.ctx,
           this.images,
           this.defaultValues
@@ -158,6 +162,7 @@ export default class CanvasFlow {
             drawCanvas(
               this.canvas,
               this.objects,
+              this.chunks,
               this.ctx,
               this.images,
               this.defaultValues
@@ -206,6 +211,7 @@ export default class CanvasFlow {
           drawCanvas(
             this.canvas,
             this.objects,
+            this.chunks,
             this.ctx,
             this.images,
             this.defaultValues
@@ -217,6 +223,7 @@ export default class CanvasFlow {
         drawCanvas(
           this.canvas,
           this.objects,
+          this.chunks,
           this.ctx,
           this.images,
           this.defaultValues
@@ -248,6 +255,7 @@ export default class CanvasFlow {
     drawCanvas(
       this.canvas,
       this.objects,
+      this.chunks,
       this.ctx,
       this.images,
       this.defaultValues
@@ -286,6 +294,7 @@ export default class CanvasFlow {
     drawCanvas(
       this.canvas,
       this.objects,
+      this.chunks,
       this.ctx,
       this.images,
       this.defaultValues
@@ -298,6 +307,51 @@ export default class CanvasFlow {
     this.objects.clear();
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  setChunk(chunk) {
+    if (typeof chunk !== "object") throw new Error(Error(errorCodes.get(101)));
+
+    const { id, ...props } = chunk;
+
+    if (id === null) throw new Error(Error(errorCodes.get(100)));
+    this.chunks.set(id, props);
+    drawCanvas(
+      this.canvas,
+      this.objects,
+      this.chunks,
+      this.ctx,
+      this.images,
+      this.defaultValues
+    );
+  }
+
+  clearChunk(chunkId) {
+    this.chunks.delete(chunkId);
+    drawCanvas(
+      this.canvas,
+      this.objects,
+      this.chunks,
+      this.ctx,
+      this.images,
+      this.defaultValues
+    );
+  }
+
+  getChunks() {
+    return [...this.chunks.entries()].map(([id, object]) => ({ id, ...object }));
+  }
+
+  clearChunks() {
+    this.chunks.clear();
+    drawCanvas(
+      this.canvas,
+      this.objects,
+      this.chunks,
+      this.ctx,
+      this.images,
+      this.defaultValues
+    );
   }
 
   on(eventName, callback) {
@@ -377,7 +431,7 @@ export default class CanvasFlow {
   }
 }
 
-function drawCanvas(canvas, objects, ctx, images, defaultValues) {
+function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
   if (!canvas) throw Error(errorCodes.get(103));
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -494,6 +548,17 @@ function drawCanvas(canvas, objects, ctx, images, defaultValues) {
       }
     }
   });
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  [...chunks.values()].forEach(
+    ({ x, y, width, height, radius, isCircular }) => {
+      if (!isCircular) return ctx.clearRect(x, y, width, height);
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(x, y, radius / 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+    }
+  );
 }
 
 function sortByZIndex(objects, defaultValues) {
