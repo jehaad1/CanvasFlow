@@ -236,17 +236,21 @@ The `clearCanvas` method clears the canvas and removes all objects:
 ```js
 canvas.clearCanvas();
 ```
-
 ## Chunks (Erasing)
-Chunks are parts in the canvas viewport that can't displays nothing under it, and can't be moved.
+
+Chunks are parts in the canvas viewport that can't display anything under them, and can't be moved.
 
 ### setChunk
+
 Use the `setChunk` method to create a chunk on the canvas:
-```js
+
+```
 canvas.setChunk(chunk);
 ```
+
 Example:
-```js
+
+```
 const rectangle = {
     type: "rectangle",
     fill: "purple",
@@ -257,14 +261,80 @@ const rectangle = {
 canvas.setObject(rectangle);
 
 canvas.setChunk({
-id: Math.random(),
-x: 10,
-y: 10,
-width: 30,
-height: 30
-})
+    id: Math.random(),
+    x: 10,
+    y: 10,
+    width: 30,
+    height: 30
+});
 ```
-<img src="./Examples/Example13.png" />
+
+![Example Image](./Examples/Example13.png)
+
+### getChunks
+
+To get all chunks on the canvas, use the `getChunks` method:
+
+```js
+const allChunks = canvas.getChunks();
+```
+
+### clearChunk
+
+The `clearChunk` method removes a chunk from the canvas:
+
+```js
+canvas.clearChunk(chunkId);
+```
+
+### clearChunks
+
+The `clearChunks` method removes all chunks and makes the entire canvas fully visible:
+
+```js
+canvas.clearChunks();
+```
+
+## Chunk Types
+
+CanvasFlow supports different chunk types:
+
+### Regular Chunk
+
+```js
+const chunk = {
+    x: 10,
+    y: 10,
+    width: 50,
+    height: 50
+};
+
+canvas.setChunk(chunk);
+```
+
+### Circular Chunk
+
+```js
+const chunk = {
+    type: "circle",
+    x: 10,
+    y: 10,
+    radius: 50
+};
+
+canvas.setChunk(chunk);
+```
+
+### Path Chunk
+
+```js
+const chunk = {
+    type: "path",
+    path: "M150 0 L75 200 L225 200 Z"
+};
+
+canvas.setChunk(chunk);
+```
 
 ## Events
 
