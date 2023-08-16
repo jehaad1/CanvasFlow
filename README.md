@@ -36,7 +36,7 @@ npm install canvasflow
 You can include CanvasFlow in your HTML file using the following CDN link:
 
 ```html
-<script src="https://unpkg.com/canvasflow@1.2.0/lib.js"></script>
+<script src="https://unpkg.com/canvasflow@2.0.0/lib.js"></script>
 ```
 
 ## Initialization
@@ -116,7 +116,8 @@ const rectangle = {
     y: 15,
     width: 50,
     height: 50,
-    fill: "black"
+    fill: "black",
+    classes: "class1 class2" // you can get the object by its classes.
 };
 
 canvas.setObject(rectangle);
@@ -152,7 +153,7 @@ const objects = [
         y: 100,
         width: 50,
         height: 50,
-        fill: "#ff0"
+        fill: "#ff0",
     }
 ];
 
@@ -174,7 +175,8 @@ Example:
 canvas.updateObject(1, {
     width: 150,
     height: 150,
-    fill: "red"
+    fill: "red",
+    classes: "red"
 });
 ```
 <img src="./Examples/Example3.png" />
@@ -193,6 +195,14 @@ To get all objects on the canvas, use the `getObjects` method:
 
 ```js
 const allObjects = canvas.getObjects();
+```
+
+### getObjectsByClassName
+
+To get all objects with a specific class on the canvas, use the `getObjectsByClassName` method:
+
+```js
+const allRedObjects = canvas.getObjectsByClassName("red");
 ```
 
 ### deleteObject
@@ -266,7 +276,8 @@ const chunk = {
     x: 10,
     y: 10,
     width: 30,
-    height: 30
+    height: 30,
+    classes: "class1 class2"
 };
 
 canvas.setChunk(chunk);
@@ -282,12 +293,20 @@ To get all chunks on the canvas, use the `getChunks` method:
 const allChunks = canvas.getChunks();
 ```
 
-### clearChunk
+### getChunksByClassName
 
-The `clearChunk` method removes a chunk from the canvas:
+To get all chunks with a specific class on the canvas, use the `getChunksByClassName` method:
 
 ```js
-canvas.clearChunk(chunkId);
+const allClass1Chunks = canvas.getChunksByClassName("class1");
+```
+
+### deleteChunk
+
+The `deleteChunk` method removes a chunk from the canvas:
+
+```js
+canvas.deleteChunk(chunkId);
 ```
 
 ### clearChunks
