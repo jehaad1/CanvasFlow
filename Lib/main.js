@@ -249,6 +249,12 @@ export default class CanvasFlow {
     );
   }
 
+  getObjectsByClassName(className) {
+    return sortByZIndex(this.objects.entries(), this.defaultValues)
+      .filter(([, object]) => object.classes.split(" ").includes(className))
+      .map(([id, object]) => ({ id, ...object }));
+  }
+
   deleteObject(id) {
     this.objects.delete(id);
     this.images.delete(id);
@@ -326,7 +332,7 @@ export default class CanvasFlow {
     );
   }
 
-  clearChunk(chunkId) {
+  deleteChunk(chunkId) {
     this.chunks.delete(chunkId);
     drawCanvas(
       this.canvas,
@@ -343,6 +349,15 @@ export default class CanvasFlow {
       id,
       ...object,
     }));
+  }
+
+  getChunksByClassName(className) {
+    return [...this.chunks.entries()]
+      .filter(([, object]) => object.classes.split(" ").includes(className))
+      .map(([id, object]) => ({
+        id,
+        ...object,
+      }));
   }
 
   clearChunks() {
