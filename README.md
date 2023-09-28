@@ -3,7 +3,7 @@
   <h1>CanvasFlow</h1>
 </div>
 
-Welcome to the CanvasFlow documentation, a JavaScript library that allow you to create and move objects on an HTML canvas with ease.
+Welcome to the CanvasFlow documentation, a JavaScript library that allows you to create and move objects on an HTML canvas with ease.
 
 ## Online Demos:
 - <a target="_blank" href="https://kashkol.jehaad.com">kashkol</a>
