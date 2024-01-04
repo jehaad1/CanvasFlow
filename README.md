@@ -60,6 +60,8 @@ import CanvasFlow from "canvasflow";
 ```js
 const myCanvas = document.querySelector("canvas.MyCanvas");
 const canvas = new CanvasFlow(myCanvas);
+
+canvas.ctx // Access the 2D rendering context of the canvas
 ```
 
 With these steps, you're ready to begin drawing on the canvas using CanvasFlow.
