@@ -474,7 +474,7 @@ const line = {
 
 canvas.setObject(line);
 ```
-<img src="./Examples/Example11.png" />
+<img src="./Examples/Example16.png" />
 
 ### Path Object
 
