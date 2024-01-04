@@ -36,7 +36,7 @@ npm install canvasflow
 You can include CanvasFlow in your HTML file using the following CDN link:
 
 ```html
-<script src="https://unpkg.com/canvasflow@2.0.0/lib.js"></script>
+<script src="https://unpkg.com/canvasflow@2.0.1/lib.js"></script>
 ```
 
 ## Initialization
@@ -93,6 +93,8 @@ The following table lists the available canvas properties and their descriptions
 | opacity      | Number | 1             | Default opacity of objects on the canvas        |
 | zIndex       | Number | 0             | Default z-index of objects on the canvas        |
 | translate    | Object | { x: 0, y: 0 } | Default translate position of objects on the canvas |
+| from    | Object | { x: 5, y: 5 } | Default starting position of line objects on the canvas |
+| to    | Object | { x: 50, y: 50 } | Default ending position of line objects on the canvas |
 
 ## Methods
 
@@ -458,6 +460,20 @@ canvas.setObject(image);
 ```
 <img src="./Examples/Example10.png" />
 
+### Line Object
+
+```js
+const line = {
+    type: "line",
+    from: { x: 100, y: 100 },
+    to: { x: 200, y: 450 },
+    stroke: { fill: "black", width: 1 }
+};
+
+canvas.setObject(line);
+```
+<img src="./Examples/Example11.png" />
+
 ### Path Object
 
 ```js
@@ -482,6 +498,7 @@ const custom = {
 
 canvas.setObject(custom);
 ```
+
 
 ## Important Tips
 
