@@ -467,8 +467,8 @@ canvas.setObject(image);
 ```js
 const line = {
     type: "line",
-    from: { x: 100, y: 100 },
-    to: { x: 200, y: 450 },
+    from: { x: 30, y: 30 },
+    to: { x: 120, y: 120 },
     stroke: { fill: "black", width: 1 }
 };
 
