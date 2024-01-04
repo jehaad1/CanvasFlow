@@ -15,6 +15,7 @@ const errorCodes = new Map([
   [113, "Invalid initialize props. 'defaultValues' must be an object."],
   [114, "Missing props. Text objects require a 'text' property."],
   [115, "Missing props. Path objects require a 'path' property."],
+  [116, "Missing props. Line objects require 'from' and 'to' properties."],
 ]);
 
 export default class CanvasFlow {
@@ -549,6 +550,22 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
         ctx.lineTo(x, y + borderRadius);
         ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
         ctx.fill();
+
+        if (object.stroke && object.stroke.width && object.stroke.fill)
+          ctx.stroke();
+
+        ctx.closePath();
+      } else if (type === "line") {
+        ctx.beginPath();
+
+        const from = object.from ?? defaultValues.get("from");
+        const to = object.to ?? defaultValues.get("to");
+
+        if (!from?.x || !from?.y || !to?.x || !to?.y)
+          throw Error(errorCodes.get(116));
+
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
 
         if (object.stroke && object.stroke.width && object.stroke.fill)
           ctx.stroke();
