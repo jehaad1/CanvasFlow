@@ -66,7 +66,7 @@ export default class CanvasFlow {
 
       const { id, ...props } = object;
 
-      if (id === null) return reject(Error(errorCodes.get(100)));
+      if (id == null) return reject(Error(errorCodes.get(100)));
       if (props.type === "path" && props.path) {
         const { width, height } = getPathProps(props.path);
         if (!props.width) props.width = width;
@@ -120,7 +120,7 @@ export default class CanvasFlow {
       objects.forEach((object) => {
         const { id, ...props } = object;
 
-        if (id === null) return reject(Error(errorCodes.get(100)));
+        if (id == null) return reject(Error(errorCodes.get(100)));
 
         if (props.type === "path" && props.path) {
           const { width, height } = getPathProps(props.path);
@@ -177,7 +177,7 @@ export default class CanvasFlow {
 
   updateObject(id, updatedProps) {
     return new Promise((resolve, reject) => {
-      if (id === null) return reject(Error(errorCodes.get(100)));
+      if (id == null) return reject(Error(errorCodes.get(100)));
       if (typeof updatedProps !== "object")
         return reject(Error(errorCodes.get(101)));
 
@@ -235,7 +235,7 @@ export default class CanvasFlow {
   }
 
   getObject(id) {
-    if (id === null) throw Error(errorCodes.get(100));
+    if (id == null) throw Error(errorCodes.get(100));
 
     let object = this.objects.get(id);
 
@@ -270,7 +270,7 @@ export default class CanvasFlow {
   }
 
   moveObject(id, deltaX, deltaY, relative) {
-    if (id === null) throw Error(errorCodes.get(100));
+    if (id == null) throw Error(errorCodes.get(100));
 
     let object = this.objects.get(id);
 
@@ -321,7 +321,7 @@ export default class CanvasFlow {
 
     const { id, ...props } = chunk;
 
-    if (id === null) throw new Error(Error(errorCodes.get(100)));
+    if (id == null) throw new Error(Error(errorCodes.get(100)));
     this.chunks.set(id, props);
     drawCanvas(
       this.canvas,
@@ -384,7 +384,7 @@ export default class CanvasFlow {
           let clientX, clientY;
 
           if (eventName.startsWith("touch")) {
-            if (eventName === "touchstart" && this.touch === null) {
+            if (eventName === "touchstart" && this.touch == null) {
               this.touch = event.touches[0].identifier;
             }
 
@@ -415,7 +415,7 @@ export default class CanvasFlow {
           }
 
           if (type === "text") {
-            if (text === null) throw Error(errorCodes.get(114));
+            if (text == null) throw Error(errorCodes.get(114));
 
             let measure = this.ctx.measureText(text);
             width = measure.width;
@@ -471,7 +471,7 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
     ctx.globalAlpha = object.opacity ?? defaultValues.get("opacity");
 
     if (type === "text") {
-      if (text === null) throw Error(errorCodes.get(114));
+      if (text == null) throw Error(errorCodes.get(114));
 
       let fontSize = object.font?.size ?? defaultValues.get("font").size;
       let fontFamily = object.font?.family || defaultValues.get("font").family;
