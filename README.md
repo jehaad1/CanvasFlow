@@ -516,6 +516,6 @@ Here are some tips to keep in mind while using CanvasFlow:
 
 - Event handling with CanvasFlow is done using the `on` method. Remember to call the returned function (e.g., `stopClickEvent()`) to stop listening to the event when it's no longer needed.
 
-- The `objects` property within the event object is sorted by z-index in descending order. This means that the first object in the array has the highest z-index value, and subsequent objects have lower z-index values.
+- The `objects` property within the event object is sorted by z-index in ascending order. This means that the first object in the array has the lowest z-index value, and subsequent objects have higher z-index values.
 
 Keep these tips in mind to make the most of CanvasFlow's capabilities and enhance your canvas-based applications.
