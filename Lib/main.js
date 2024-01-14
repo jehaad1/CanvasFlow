@@ -276,7 +276,7 @@ export default class CanvasFlow {
 
     if (!object) throw Error(errorCodes.get(106));
 
-    if (object.type === "path") {
+    if (object.type === "path" || object.type === "line") {
       if (object.translate) {
         if (relative === "relative") {
           object.translate.x += deltaX;
