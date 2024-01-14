@@ -434,10 +434,10 @@ export default class CanvasFlow {
               if (!from?.x || !from?.y || !to?.x || !to?.y)
                 throw Error(errorCodes.get(116));
               return (
-                clientX >= from.x &&
-                clientX <= to.x &&
-                clientY >= from.y &&
-                clientY <= to.y
+                clientX >= from.x + x &&
+                clientX <= to.x + x &&
+                clientY >= from.y + y &&
+                clientY <= to.y + y
               );
             }
             return (
