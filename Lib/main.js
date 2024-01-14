@@ -380,63 +380,74 @@ export default class CanvasFlow {
 
     let eventHandler = (event) => {
       event.objects = sortByZIndex(this.objects.entries(), this.defaultValues)
-        .filter(([, { x, y, translate, width, height, type, text }]) => {
-          let clientX, clientY;
+        .filter(
+          ([, { x, y, from, to, translate, width, height, type, text }]) => {
+            let clientX, clientY;
 
-          if (eventName.startsWith("touch")) {
-            if (eventName === "touchstart" && this.touch == null) {
-              this.touch = event.touches[0].identifier;
-            }
-
-            if (eventName === "touchend") {
-              if (this.touch !== event.changedTouches[0].identifier) {
-                return false;
+            if (eventName.startsWith("touch")) {
+              if (eventName === "touchstart" && this.touch == null) {
+                this.touch = event.touches[0].identifier;
               }
 
-              clientX = event.changedTouches[0].clientX;
-              clientY = event.changedTouches[0].clientY;
-              this.touch = null;
+              if (eventName === "touchend") {
+                if (this.touch !== event.changedTouches[0].identifier) {
+                  return false;
+                }
+
+                clientX = event.changedTouches[0].clientX;
+                clientY = event.changedTouches[0].clientY;
+                this.touch = null;
+              } else {
+                if (this.touch !== event.changedTouches[0].identifier) {
+                  return false;
+                }
+
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+              }
             } else {
-              if (this.touch !== event.changedTouches[0].identifier) {
-                return false;
-              }
-
-              clientX = event.touches[0].clientX;
-              clientY = event.touches[0].clientY;
+              clientX = event.offsetX;
+              clientY = event.offsetY;
             }
-          } else {
-            clientX = event.offsetX;
-            clientY = event.offsetY;
-          }
 
-          if (translate) {
-            x = (translate.x ?? 0) + (x ?? 0);
-            y = (translate.y ?? 0) + (y ?? 0);
-          }
+            if (translate) {
+              x = (translate.x ?? 0) + (x ?? 0);
+              y = (translate.y ?? 0) + (y ?? 0);
+            }
 
-          if (type === "text") {
-            if (text == null) throw Error(errorCodes.get(114));
+            if (type === "text") {
+              if (text == null) throw Error(errorCodes.get(114));
 
-            let measure = this.ctx.measureText(text);
-            width = measure.width;
-            height =
-              measure.actualBoundingBoxAscent +
-              measure.actualBoundingBoxDescent;
-          } else if (type === "circle") {
+              let measure = this.ctx.measureText(text);
+              width = measure.width;
+              height =
+                measure.actualBoundingBoxAscent +
+                measure.actualBoundingBoxDescent;
+            } else if (type === "circle") {
+              return (
+                clientX >= x - width / 2 &&
+                clientX <= x + width / 2 &&
+                clientY >= y - height / 2 &&
+                clientY <= y + height / 2
+              );
+            } else if (type === "line") {
+              if (!from?.x || !from?.y || !to?.x || !to?.y)
+                throw Error(errorCodes.get(116));
+              return (
+                clientX >= from.x &&
+                clientX <= to.x &&
+                clientY >= from.y &&
+                clientY <= to.y
+              );
+            }
             return (
-              clientX >= x - width / 2 &&
-              clientX <= x + width / 2 &&
-              clientY >= y - height / 2 &&
-              clientY <= y + height / 2
+              clientX >= x &&
+              clientX <= x + width &&
+              clientY >= y &&
+              clientY <= y + height
             );
           }
-          return (
-            clientX >= x &&
-            clientX <= x + width &&
-            clientY >= y &&
-            clientY <= y + height
-          );
-        })
+        )
         .map(([id, props]) => ({ id, ...props }));
 
       callback(event);
