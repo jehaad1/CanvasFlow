@@ -28,7 +28,7 @@ You can install CanvasFlow using either npm or by including it directly from a C
 To install CanvasFlow using npm, run the following command:
 
 ```bash
-npm install canvasflow
+npm install canvasflow@latest
 ```
 
 ### CDN Installation
@@ -36,7 +36,7 @@ npm install canvasflow
 You can include CanvasFlow in your HTML file using the following CDN link:
 
 ```html
-<script src="https://unpkg.com/canvasflow@2.0.1/lib.js"></script>
+<script src="https://unpkg.com/canvasflow@2.0.3/lib.js"></script>
 ```
 
 ## Initialization
