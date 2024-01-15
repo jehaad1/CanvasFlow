@@ -632,6 +632,14 @@ function sortByZIndex(objects, defaultValues) {
       return 1;
     }
 
+    if (isNaN(zIndex1)) {
+      zIndex1 = Infinity;
+    }
+
+    if (isNaN(zIndex2)) {
+      zIndex2 = Infinity;
+    }
+
     return zIndex1 - zIndex2;
   });
 }
