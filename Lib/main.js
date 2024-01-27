@@ -239,8 +239,6 @@ export default class CanvasFlow {
 
     let object = this.objects.get(id);
 
-    if (!object) throw Error(errorCodes.get(106));
-
     return object;
   }
 
@@ -267,6 +265,10 @@ export default class CanvasFlow {
       this.images,
       this.defaultValues
     );
+  }
+
+  isObjectExists(id) {
+    return this.objects.has(id);
   }
 
   moveObject(id, deltaX, deltaY, relative) {
