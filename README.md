@@ -193,6 +193,14 @@ Retrieve an object's properties and position using the `getObject` method:
 const myObject = canvas.getObject(objectId);
 ```
 
+### isObjectExists
+
+To check if the object is exists, use the `isObjectExists` method:
+
+```js
+const allRedObjects = canvas.isObjectExists(objectId);
+```
+
 ### getObjects
 
 To get all objects on the canvas, use the `getObjects` method:
