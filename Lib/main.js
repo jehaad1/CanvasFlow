@@ -324,7 +324,10 @@ export default class CanvasFlow {
     let eventHandler = (event) => {
       event.objects = sortByZIndex(this.objects.entries(), this.defaultValues)
         .filter(
-          ([, { x, y, from, to, translate, width, height, type, text }]) => {
+          ([
+            ,
+            { x, y, from, to, translate, width, height, type, text, scale },
+          ]) => {
             let clientX, clientY;
 
             if (eventName.startsWith("touch")) {
@@ -353,6 +356,11 @@ export default class CanvasFlow {
               clientY = event.offsetY;
             }
 
+            x = (x ?? 0) * (scale ?? 1);
+            y = (y ?? 0) * (scale ?? 1);
+            width = (width ?? 0) * (scale ?? 1);
+            height = (height ?? 0) * (scale ?? 1);
+
             if (translate) {
               x = (translate.x ?? 0) + (x ?? 0);
               y = (translate.y ?? 0) + (y ?? 0);
@@ -366,6 +374,8 @@ export default class CanvasFlow {
               height =
                 measure.actualBoundingBoxAscent +
                 measure.actualBoundingBoxDescent;
+              width *= scale ?? 1;
+              height *= scale ?? 1;
             } else if (type === "circle") {
               return (
                 clientX >= x - width / 2 &&
@@ -377,10 +387,10 @@ export default class CanvasFlow {
               if (!from?.x || !from?.y || !to?.x || !to?.y)
                 throw Error(errorCodes.get(116));
               return (
-                clientX >= from.x + x &&
-                clientX <= to.x + x &&
-                clientY >= from.y + y &&
-                clientY <= to.y + y
+                clientX >= from.x &&
+                clientX <= to.x &&
+                clientY >= from.y &&
+                clientY <= to.y
               );
             }
             return (
