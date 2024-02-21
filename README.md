@@ -13,8 +13,6 @@ Welcome to the CanvasFlow documentation, a JavaScript library that allows you to
 - [Initialization](#initialization)
 - [Canvas Properties](#canvas-properties)
 - [Methods](#methods)
-- [Chunks (Erasing)](#chunks-erasing)
-- [Chunk Types](#chunk-types)
 - [Events](#events)
 - [Object Types](#object-types)
 - [Important Tips](#important-tips)
@@ -95,8 +93,10 @@ The following table lists the available canvas properties and their descriptions
 | opacity      | Number | 1             | Default opacity of objects on the canvas        |
 | zIndex       | Number | 0             | Default z-index of objects on the canvas        |
 | translate    | Object | { x: 0, y: 0 } | Default translate position of objects on the canvas |
+| scale | Number | 1                | Default scale of objects on the canvas |
 | from    | Object | { x: 5, y: 5 } | Default starting position of line objects on the canvas |
 | to    | Object | { x: 50, y: 50 } | Default ending position of line objects on the canvas |
+| isChunk | Boolean | false | Default value if the object acts as an eraser (true) or is drawn normally (false) on the canvas |
 
 ## Methods
 
@@ -259,119 +259,6 @@ The `clearCanvas` method clears the canvas and removes all objects:
 ```js
 canvas.clearCanvas();
 ```
-## Chunks (Erasing)
-
-Chunks represent transparent areas within the canvas viewport. They act as regions of erasure, where nothing is displayed underneath, and they remain fixed in position.
-
-### setChunk
-
-Use the `setChunk` method to create a chunk on the canvas:
-
-```js
-canvas.setChunk(chunk);
-```
-
-Example:
-
-```js
-const rectangle = {
-    type: "rectangle",
-    fill: "purple",
-    width: 75,
-    height: 75
-};
-
-canvas.setObject(rectangle);
-
-const chunk = {
-    id: Math.random(),
-    x: 10,
-    y: 10,
-    width: 30,
-    height: 30,
-    classes: "class1 class2"
-};
-
-canvas.setChunk(chunk);
-```
-
-<img src="./Examples/Example13.png" />
-
-### getChunks
-
-To get all chunks on the canvas, use the `getChunks` method:
-
-```js
-const allChunks = canvas.getChunks();
-```
-
-### getChunksByClassName
-
-To get all chunks with a specific class on the canvas, use the `getChunksByClassName` method:
-
-```js
-const allClass1Chunks = canvas.getChunksByClassName("class1");
-```
-
-### deleteChunk
-
-The `deleteChunk` method removes a chunk from the canvas:
-
-```js
-canvas.deleteChunk(chunkId);
-```
-
-### clearChunks
-
-The `clearChunks` method removes all chunks and makes the entire canvas fully visible:
-
-```js
-canvas.clearChunks();
-```
-
-## Chunk Types
-
-CanvasFlow supports different chunk types:
-
-### Regular Chunk
-
-```js
-const chunk = {
-    x: 10,
-    y: 10,
-    width: 50,
-    height: 50
-};
-
-canvas.setChunk(chunk);
-```
-<img src="./Examples/Example13.png" />
-
-### Circular Chunk
-
-```js
-const chunk = {
-    type: "circle",
-    x: 40,
-    y: 40,
-    radius: 50
-};
-
-canvas.setChunk(chunk);
-```
-<img src="./Examples/Example14.png" />
-
-### Path Chunk
-
-```js
-const chunk = {
-    type: "path",
-    path: "M150 0 L75 200 L225 200 Z"
-};
-
-canvas.setChunk(chunk);
-```
-<img src="./Examples/Example15.png" />
 
 ## Events
 
