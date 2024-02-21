@@ -5,7 +5,7 @@ const errorCodes = new Map([
   [103, "Invalid canvas. No canvas captured."],
   [104, "Invalid argument. Argument must be a string."],
   [105, "Invalid argument. Argument must be a function."],
-  [106, "Invalid ID. No object found with that ID."],
+  [106, "Invalid Id. No object found with that Id."],
   [107, "Missing props. Custom objects require a 'draw' property."],
   [108, "Invalid props. 'draw' must be a function."],
   [109, "Missing props. Objects require a 'type' property."],
@@ -16,11 +16,15 @@ const errorCodes = new Map([
   [114, "Missing props. Text objects require a 'text' property."],
   [115, "Missing props. Path objects require a 'path' property."],
   [116, "Missing props. Line objects require 'from' and 'to' properties."],
+  [117, "Invalid props. 'scale' must be 0 or a positive number."],
+  [
+    118,
+    "Invalid props. 'isChunk' can only be used with circle, path, and rectangle.",
+  ],
 ]);
 
 export default class CanvasFlow {
   objects = new Map();
-  chunks = new Map();
   images = new Map();
   defaultValues = new Map([
     ["x", 0],
@@ -35,6 +39,8 @@ export default class CanvasFlow {
     ["opacity", 1],
     ["zIndex", 0],
     ["translate", { x: 0, y: 0 }],
+    ["scale", 1],
+    ["isChunk", false],
   ]);
 
   canvas;
@@ -85,7 +91,6 @@ export default class CanvasFlow {
           drawCanvas(
             this.canvas,
             this.objects,
-            this.chunks,
             this.ctx,
             this.images,
             this.defaultValues
@@ -97,7 +102,6 @@ export default class CanvasFlow {
         drawCanvas(
           this.canvas,
           this.objects,
-          this.chunks,
           this.ctx,
           this.images,
           this.defaultValues
@@ -151,7 +155,6 @@ export default class CanvasFlow {
         drawCanvas(
           this.canvas,
           this.objects,
-          this.chunks,
           this.ctx,
           this.images,
           this.defaultValues
@@ -163,7 +166,6 @@ export default class CanvasFlow {
             drawCanvas(
               this.canvas,
               this.objects,
-              this.chunks,
               this.ctx,
               this.images,
               this.defaultValues
@@ -212,7 +214,6 @@ export default class CanvasFlow {
           drawCanvas(
             this.canvas,
             this.objects,
-            this.chunks,
             this.ctx,
             this.images,
             this.defaultValues
@@ -224,7 +225,6 @@ export default class CanvasFlow {
         drawCanvas(
           this.canvas,
           this.objects,
-          this.chunks,
           this.ctx,
           this.images,
           this.defaultValues
@@ -260,7 +260,6 @@ export default class CanvasFlow {
     drawCanvas(
       this.canvas,
       this.objects,
-      this.chunks,
       this.ctx,
       this.images,
       this.defaultValues
@@ -303,7 +302,6 @@ export default class CanvasFlow {
     drawCanvas(
       this.canvas,
       this.objects,
-      this.chunks,
       this.ctx,
       this.images,
       this.defaultValues
@@ -316,63 +314,6 @@ export default class CanvasFlow {
     this.objects.clear();
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
-
-  setChunk(chunk) {
-    if (typeof chunk !== "object") throw new Error(Error(errorCodes.get(101)));
-
-    const { id, ...props } = chunk;
-
-    if (id == null) throw new Error(Error(errorCodes.get(100)));
-    this.chunks.set(id, props);
-    drawCanvas(
-      this.canvas,
-      this.objects,
-      this.chunks,
-      this.ctx,
-      this.images,
-      this.defaultValues
-    );
-  }
-
-  deleteChunk(chunkId) {
-    this.chunks.delete(chunkId);
-    drawCanvas(
-      this.canvas,
-      this.objects,
-      this.chunks,
-      this.ctx,
-      this.images,
-      this.defaultValues
-    );
-  }
-
-  getChunks() {
-    return [...this.chunks.entries()].map(([id, object]) => ({
-      id,
-      ...object,
-    }));
-  }
-
-  getChunksByClassName(className) {
-    return [...this.chunks.entries()]
-      .filter(([, object]) => object.classes.split(" ").includes(className))
-      .map(([id, object]) => ({
-        id,
-        ...object,
-      }));
-  }
-
-  clearChunks() {
-    this.chunks.clear();
-    drawCanvas(
-      this.canvas,
-      this.objects,
-      this.chunks,
-      this.ctx,
-      this.images,
-      this.defaultValues
-    );
   }
 
   on(eventName, callback) {
@@ -463,7 +404,7 @@ export default class CanvasFlow {
   }
 }
 
-function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
+function drawCanvas(canvas, objects, ctx, images, defaultValues) {
   if (!canvas) throw Error(errorCodes.get(103));
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -473,11 +414,41 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
     const type = object.type || defaultValues.get("type");
     if (!type) throw Error(errorCodes.get(109));
 
+    const scale = object.scale ?? defaultValues.get("scale");
+    if (scale <= 0) throw Error(errorCodes.get(117));
     const x = object.x ?? defaultValues.get("x");
     const y = object.y ?? defaultValues.get("y");
     const text = object.text ?? defaultValues.get("text");
+    const isChunk = object.isChunk ?? defaultValues.get("isChunk");
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+    if (isChunk) {
+      if (!["circle", "path", "rectangle"].includes(type))
+        throw Error(errorCodes.get(118));
+      const width = object.width ?? defaultValues.get("width");
+      const height = object.height ?? defaultValues.get("height");
+      ctx.scale(scale, scale);
+      if (type === "circle") {
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.beginPath();
+        ctx.ellipse(x, y, width / 2, height / 2, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.globalCompositeOperation = "source-over";
+      } else if (type === "path") {
+        ctx.save();
+        const path = object.path;
+        if (!path) throw Error(errorCodes.get(115));
+        ctx.clip(new Path2D(path));
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+      } else if (type === "rectangle") {
+        ctx.clearRect(x, y, width, height);
+      }
+      return;
+    }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(scale, scale);
     ctx.fillStyle = object.fill || defaultValues.get("fill");
     ctx.strokeStyle = object.stroke?.fill || defaultValues.get("stroke").fill;
     ctx.lineWidth = object.stroke?.width ?? defaultValues.get("stroke").width;
@@ -486,8 +457,9 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
     if (type === "text") {
       if (text == null) throw Error(errorCodes.get(114));
 
-      let fontSize = object.font?.size ?? defaultValues.get("font").size;
-      let fontFamily = object.font?.family || defaultValues.get("font").family;
+      const fontSize = object.font?.size ?? defaultValues.get("font").size;
+      const fontFamily =
+        object.font?.family || defaultValues.get("font").family;
       ctx.textBaseline = "top";
       ctx.font = `${fontSize}px ${fontFamily}`;
       ctx.fillText(text, x, y);
@@ -496,12 +468,12 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
         ctx.strokeText(text, x, y);
       }
     } else {
-      let width = object.width ?? defaultValues.get("width");
-      let height = object.height ?? defaultValues.get("height");
-      let borderRadius =
+      const width = object.width ?? defaultValues.get("width");
+      const height = object.height ?? defaultValues.get("height");
+      const borderRadius =
         object.borderRadius ?? defaultValues.get("borderRadius");
-      let translate = object.translate ?? defaultValues.get("translate");
-      let rotation = object.rotation ?? defaultValues.get("rotation");
+      const translate = object.translate ?? defaultValues.get("translate");
+      const rotation = object.rotation ?? defaultValues.get("rotation");
 
       if (rotation) {
         ctx.translate(x, y);
@@ -597,24 +569,6 @@ function drawCanvas(canvas, objects, chunks, ctx, images, defaultValues) {
     }
   });
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  [...chunks.values()].forEach(
-    ({ x, y, width, height, radius, path, type }) => {
-      if (type === "circle") {
-        ctx.globalCompositeOperation = "destination-out";
-        ctx.beginPath();
-        ctx.arc(x, y, radius / 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalCompositeOperation = "source-over";
-      } else if (type === "path") {
-        ctx.save();
-        ctx.clip(new Path2D(path));
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.restore();
-      } else {
-        ctx.clearRect(x, y, width, height);
-      }
-    }
-  );
 }
 
 function sortByZIndex(objects, defaultValues) {
