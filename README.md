@@ -34,7 +34,7 @@ npm install canvasflow@latest
 You can include CanvasFlow in your HTML file using the following CDN link:
 
 ```html
-<script src="https://unpkg.com/canvasflow@2.2.0/lib.js"></script>
+<script src="https://unpkg.com/canvasflow@2.3.0/lib.js"></script>
 ```
 
 ## Initialization
