@@ -96,6 +96,7 @@ The following table lists the available canvas properties and their descriptions
 | scale | Number | 1                | Default scale of objects on the canvas |
 | from    | Object | { x: 5, y: 5 } | Default starting position of line objects on the canvas |
 | to    | Object | { x: 50, y: 50 } | Default ending position of line objects on the canvas |
+| points    | Array | [] | Default points of polygon objects on the canvas |
 | isChunk | Boolean | false | Default value if the object acts as an eraser (true) or is drawn normally (false) on the canvas |
 
 ## Methods
@@ -308,6 +309,24 @@ const triangle = {
 canvas.setObject(triangle);
 ```
 <img src="./Examples/Example6.png" />
+
+### Polygon Object
+
+```js
+const polygon = {
+    type: "polygon",
+    fill: "purple",
+    points: [
+        { x: 0, y: 0 },
+        { x: 75, y: 25 },
+        { x: 75, y: 75 },
+        { x: 0, y: 75 },
+    ],
+};
+
+canvas.setObject(polygon);
+```
+<img src="./Examples/Example17.png" />
 
 ### Circle Object
 
