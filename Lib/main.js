@@ -21,6 +21,7 @@ const errorCodes = new Map([
     118,
     "Invalid props. 'isChunk' can only be used with circle, path, and rectangle.",
   ],
+  [119, "Missing props. Polygon objects require a 'points' property."],
 ]);
 
 export default class CanvasFlow {
@@ -41,6 +42,7 @@ export default class CanvasFlow {
     ["translate", { x: 0, y: 0 }],
     ["scale", 1],
     ["isChunk", false],
+    ["points", []],
   ]);
 
   canvas;
@@ -74,7 +76,9 @@ export default class CanvasFlow {
 
       if (id == null) return reject(Error(errorCodes.get(100)));
       if (props.type === "path" && props.path) {
-        const { width, height } = getPathProps(props.path);
+        const { x, y, width, height } = getPathProps(props.path);
+        if (!props.x) props.x = x;
+        if (!props.y) props.y = y;
         if (!props.width) props.width = width;
         if (!props.height) props.height = height;
       }
@@ -88,24 +92,52 @@ export default class CanvasFlow {
         image.src = props.url;
         image.onload = () => {
           this.images.set(id, image);
-          drawCanvas(
+          const paths = drawCanvas(
             this.canvas,
             this.objects,
             this.ctx,
             this.images,
             this.defaultValues
           );
+          paths.forEach(({ id, x, y, width, height }) => {
+            const object = this.objects.get(id);
+            const newX = object.x ?? x;
+            const newY = object.y ?? y;
+            const newWidth = object.width ?? width;
+            const newHeight = object.height ?? height;
+            this.objects.set(id, {
+              ...object,
+              x: newX,
+              y: newY,
+              width: newWidth,
+              height: newHeight,
+            });
+          });
           resolve(object);
         };
         image.onerror = reject;
       } else {
-        drawCanvas(
+        const paths = drawCanvas(
           this.canvas,
           this.objects,
           this.ctx,
           this.images,
           this.defaultValues
         );
+        paths.forEach(({ id, x, y, width, height }) => {
+          const object = this.objects.get(id);
+          const newX = object.x ?? x;
+          const newY = object.y ?? y;
+          const newWidth = object.width ?? width;
+          const newHeight = object.height ?? height;
+          this.objects.set(id, {
+            ...object,
+            x: newX,
+            y: newY,
+            width: newWidth,
+            height: newHeight,
+          });
+        });
         resolve(object);
       }
     });
@@ -127,7 +159,9 @@ export default class CanvasFlow {
         if (id == null) return reject(Error(errorCodes.get(100)));
 
         if (props.type === "path" && props.path) {
-          const { width, height } = getPathProps(props.path);
+          const { x, y, width, height } = getPathProps(props.path);
+          if (!props.x) props.x = x;
+          if (!props.y) props.y = y;
           if (!props.width) props.width = width;
           if (!props.height) props.height = height;
         }
@@ -152,24 +186,52 @@ export default class CanvasFlow {
       });
 
       if (imagePromises.length === 0) {
-        drawCanvas(
+        const paths = drawCanvas(
           this.canvas,
           this.objects,
           this.ctx,
           this.images,
           this.defaultValues
         );
+        paths.forEach(({ id, x, y, width, height }) => {
+          const object = this.objects.get(id);
+          const newX = object.x ?? x;
+          const newY = object.y ?? y;
+          const newWidth = object.width ?? width;
+          const newHeight = object.height ?? height;
+          this.objects.set(id, {
+            ...object,
+            x: newX,
+            y: newY,
+            width: newWidth,
+            height: newHeight,
+          });
+        });
         resolve(objects);
       } else {
         Promise.all(imagePromises)
           .then(() => {
-            drawCanvas(
+            const paths = drawCanvas(
               this.canvas,
               this.objects,
               this.ctx,
               this.images,
               this.defaultValues
             );
+            paths.forEach(({ id, x, y, width, height }) => {
+              const object = this.objects.get(id);
+              const newX = object.x ?? x;
+              const newY = object.y ?? y;
+              const newWidth = object.width ?? width;
+              const newHeight = object.height ?? height;
+              this.objects.set(id, {
+                ...object,
+                x: newX,
+                y: newY,
+                width: newWidth,
+                height: newHeight,
+              });
+            });
             resolve(objects);
           })
           .catch(reject);
@@ -196,7 +258,9 @@ export default class CanvasFlow {
         if (key === "url") needsRedraw = true;
 
         if (key === "path" && object.type === "path") {
-          const { width, height } = getPathProps(value);
+          const { x, y, width, height } = getPathProps(value);
+          if (!object.x) object.x = x;
+          if (!object.y) object.y = y;
           if (!object.width) object.width = width;
           if (!object.height) object.height = height;
         }
@@ -211,24 +275,41 @@ export default class CanvasFlow {
         image.src = object.url;
         image.onload = () => {
           this.images.set(id, image);
-          drawCanvas(
+          const paths = drawCanvas(
             this.canvas,
             this.objects,
             this.ctx,
             this.images,
             this.defaultValues
           );
+          paths.forEach(({ id, width, height }) => {
+            this.objects.set(id, { ...this.objects.get(id), width, height });
+          });
           resolve(object);
         };
         image.onerror = reject;
       } else {
-        drawCanvas(
+        const paths = drawCanvas(
           this.canvas,
           this.objects,
           this.ctx,
           this.images,
           this.defaultValues
         );
+        paths.forEach(({ id, x, y, width, height }) => {
+          const object = this.objects.get(id);
+          const newX = object.x ?? x;
+          const newY = object.y ?? y;
+          const newWidth = object.width ?? width;
+          const newHeight = object.height ?? height;
+          this.objects.set(id, {
+            ...object,
+            x: newX,
+            y: newY,
+            width: newWidth,
+            height: newHeight,
+          });
+        });
         resolve(object);
       }
     });
@@ -257,13 +338,27 @@ export default class CanvasFlow {
   deleteObject(id) {
     this.objects.delete(id);
     this.images.delete(id);
-    drawCanvas(
+    const paths = drawCanvas(
       this.canvas,
       this.objects,
       this.ctx,
       this.images,
       this.defaultValues
     );
+    paths.forEach(({ id, x, y, width, height }) => {
+      const object = this.objects.get(id);
+      const newX = object.x ?? x;
+      const newY = object.y ?? y;
+      const newWidth = object.width ?? width;
+      const newHeight = object.height ?? height;
+      this.objects.set(id, {
+        ...object,
+        x: newX,
+        y: newY,
+        width: newWidth,
+        height: newHeight,
+      });
+    });
   }
 
   isObjectExists(id) {
@@ -277,7 +372,7 @@ export default class CanvasFlow {
 
     if (!object) throw Error(errorCodes.get(106));
 
-    if (object.type === "path" || object.type === "line") {
+    if (["line", "path", "polygon"].includes(object.type)) {
       if (object.translate) {
         if (relative === "relative") {
           object.translate.x += deltaX;
@@ -299,13 +394,27 @@ export default class CanvasFlow {
       }
     }
 
-    drawCanvas(
+    const paths = drawCanvas(
       this.canvas,
       this.objects,
       this.ctx,
       this.images,
       this.defaultValues
     );
+    paths.forEach(({ id, x, y, width, height }) => {
+      const object = this.objects.get(id);
+      const newX = object.x ?? x;
+      const newY = object.y ?? y;
+      const newWidth = object.width ?? width;
+      const newHeight = object.height ?? height;
+      this.objects.set(id, {
+        ...object,
+        x: newX,
+        y: newY,
+        width: newWidth,
+        height: newHeight,
+      });
+    });
   }
 
   clearCanvas() {
@@ -326,7 +435,22 @@ export default class CanvasFlow {
         .filter(
           ([
             ,
-            { x, y, from, to, translate, width, height, type, text, scale },
+            {
+              x,
+              y,
+              from,
+              to,
+              translate,
+              width,
+              height,
+              type,
+              path,
+              points,
+              text,
+              scale,
+              rotation,
+              stroke,
+            },
           ]) => {
             let clientX, clientY;
 
@@ -343,14 +467,13 @@ export default class CanvasFlow {
                 clientX = event.changedTouches[0].clientX;
                 clientY = event.changedTouches[0].clientY;
                 this.touch = null;
-              } else {
-                if (this.touch !== event.changedTouches[0].identifier) {
-                  return false;
-                }
-
-                clientX = event.touches[0].clientX;
-                clientY = event.touches[0].clientY;
               }
+              if (this.touch !== event.changedTouches[0].identifier) {
+                return false;
+              }
+
+              clientX = event.touches[0].clientX;
+              clientY = event.touches[0].clientY;
             } else {
               clientX = event.offsetX;
               clientY = event.offsetY;
@@ -366,39 +489,76 @@ export default class CanvasFlow {
               y = (translate.y ?? 0) + (y ?? 0);
             }
 
-            if (type === "text") {
-              if (text == null) throw Error(errorCodes.get(114));
+            if (!rotation || rotation === 0) {
+              const object = new Path2D();
+              if (type === "circle") {
+                object.arc(x, y, width / 2, 0, 2 * Math.PI);
+              } else if (type === "path") {
+                if (!(path ?? this.defaultValues.get("path")))
+                  throw Error(errorCodes.get(115));
+                let { x, y, width, height } = getPathProps(
+                  path ?? this.defaultValues.get("path")
+                );
+                if (translate) {
+                  x = (translate.x ?? 0) + (x ?? 0);
+                  y = (translate.y ?? 0) + (y ?? 0);
+                }
+                object.rect(x, y, width, height);
+              } else if (type === "polygon") {
+                let Points = points ?? this.defaultValues.get("points");
+                if (!Points) throw Error(errorCodes.get(119));
+                if (translate) {
 
-              let measure = this.ctx.measureText(text);
-              width = measure.width;
-              height =
-                measure.actualBoundingBoxAscent +
-                measure.actualBoundingBoxDescent;
-              width *= scale ?? 1;
-              height *= scale ?? 1;
-            } else if (type === "circle") {
+                  Points = Points.map((point) => ({
+                    x: point.x + (translate.x ?? 0),
+                    y: point.y + (translate.y ?? 0),
+                  }));
+                }
+                object.moveTo(Points[0].x, Points[0].y);
+                for (let i = 1; i < Points.length; i++) {
+                  object.lineTo(Points[i].x, Points[i].y);
+                }
+                object.lineTo(Points[0].x, Points[0].y);
+              } else if (type === "line") {
+                if (!from?.x || !from?.y || !to?.x || !to?.y)
+                  throw Error(errorCodes.get(116));
+                const smallestX = Math.min(from.x, to.x) + x;
+                const largestX = Math.max(from.x, to.x) + x;
+                const smallestY = Math.min(from.y, to.y) + y;
+                const largestY = Math.max(from.y, to.y) + y;
+                object.rect(
+                  smallestX,
+                  smallestY,
+                  largestX - smallestX,
+                  largestY - smallestY
+                );
+              } else if (type === "text") {
+                if (text == null) throw Error(errorCodes.get(114));
+                const fontSize =
+                  object.font?.size ?? this.defaultValues.get("font").size;
+                const fontFamily =
+                  object.font?.family || this.defaultValues.get("font").family;
+                this.ctx.textBaseline = "top";
+                this.ctx.font = `${fontSize}px ${fontFamily}`;
+                const measure = this.ctx.measureText(text);
+                object.rect(
+                  x,
+                  y,
+                  measure.width,
+                  measure.actualBoundingBoxAscent +
+                    measure.actualBoundingBoxDescent
+                );
+              } else {
+                object.rect(x, y, width, height);
+              }
+
               return (
-                clientX >= x - width / 2 &&
-                clientX <= x + width / 2 &&
-                clientY >= y - height / 2 &&
-                clientY <= y + height / 2
+                this.ctx.isPointInPath(object, clientX, clientY) ||
+                this.ctx.isPointInStroke(object, clientX, clientY)
               );
-            } else if (type === "line") {
-              if (!from?.x || !from?.y || !to?.x || !to?.y)
-                throw Error(errorCodes.get(116));
-              return (
-                clientX >= from.x &&
-                clientX <= to.x &&
-                clientY >= from.y &&
-                clientY <= to.y
-              );
+            } else {
+
             }
-            return (
-              clientX >= x &&
-              clientX <= x + width &&
-              clientY >= y &&
-              clientY <= y + height
-            );
           }
         )
         .map(([id, props]) => ({ id, ...props }));
@@ -420,6 +580,7 @@ function drawCanvas(canvas, objects, ctx, images, defaultValues) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  const pathProps = [];
   sortByZIndex(objects.entries(), defaultValues).forEach(([id, object]) => {
     const type = object.type || defaultValues.get("type");
     if (!type) throw Error(errorCodes.get(109));
@@ -451,6 +612,8 @@ function drawCanvas(canvas, objects, ctx, images, defaultValues) {
         ctx.clip(new Path2D(path));
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.restore();
+        const { x, y, width, height } = getPathProps(path);
+        pathProps.push({ id, width, height, x, y });
       } else if (type === "rectangle") {
         ctx.clearRect(x, y, width, height);
       }
@@ -513,6 +676,23 @@ function drawCanvas(canvas, objects, ctx, images, defaultValues) {
         ctx.fill(path2D);
         if (object.stroke && object.stroke.width && object.stroke.fill)
           ctx.stroke(path2D);
+        ctx.closePath();
+        const { x, y, width, height } = getPathProps(path);
+        pathProps.push({ id, width, height, x, y });
+      } else if (type === "polygon") {
+        ctx.beginPath();
+
+        const points = object.points ?? defaultValues.get("points");
+        if (!points) throw Error(errorCodes.get(119));
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.lineTo(points[0].x, points[0].y);
+
+        ctx.fill();
+        if (object.stroke && object.stroke.width && object.stroke.fill)
+          ctx.stroke();
         ctx.closePath();
       } else if (type === "rectangle") {
         ctx.beginPath();
@@ -579,6 +759,7 @@ function drawCanvas(canvas, objects, ctx, images, defaultValues) {
     }
   });
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+  return pathProps;
 }
 
 function sortByZIndex(objects, defaultValues) {
@@ -620,9 +801,9 @@ function getPathProps(path) {
   svg.appendChild(svgPath);
   document.body.appendChild(svg);
 
-  const { width, height } = svgPath.getBoundingClientRect();
+  const bbox = svgPath.getBBox();
 
   document.body.removeChild(svg);
 
-  return { width, height };
+  return { width: bbox.width, height: bbox.height, x: bbox.x, y: bbox.y };
 }
