@@ -438,4 +438,6 @@ Here are some tips to keep in mind while using CanvasFlow:
 
 - The `objects` property within the event object is sorted by z-index in ascending order. This means that the first object in the array has the lowest z-index value, and subsequent objects have higher z-index values.
 
+- Some of the filters properties are just appliable to images.
+
 Keep these tips in mind to make the most of CanvasFlow's capabilities and enhance your canvas-based applications.
