@@ -5,9 +5,6 @@
 
 Welcome to the CanvasFlow documentation, a JavaScript library that allows you to create and move objects on an HTML canvas with ease.
 
-## Online Demos:
-- <a target="_blank" href="https://kashkol.jehaad.com">Kashkol - كشكول</a>
-
 ## Table of Contents
 - [Installation](#installation)
 - [Initialization](#initialization)
@@ -91,6 +88,15 @@ The following table lists the available canvas properties and their descriptions
 | borderRadius | Number | 0             | Default border radius of objects on the canvas  |
 | rotation     | Number | 0             | Default rotation of objects on the canvas       |
 | opacity      | Number | 1             | Default opacity of objects on the canvas        |
+| blurness     | String | "0px"         | Default blurness of objects on the canvas       |
+| brightness   | Number | 1             | Default brightness of objects on the canvas     |
+| contrast     | Number | 1             | Default contrast of objects on the canvas       |
+| grayscale    | Number | 0             | Default grayscale of objects on the canvas      |
+| hueRotate    | Number | 0             | Default hueRotate of objects on the canvas      |
+| invert       | Number | 0             | Default invert of objects on the canvas         |
+| saturate     | Number | 1             | Default saturate of objects on the canvas       |
+| sepia        | Number | 0             | Default sepia of objects on the canvas          |
+| dropShadow   | Object | {}             | Default dropShadow of objects on the canvas    |
 | zIndex       | Number | 0             | Default z-index of objects on the canvas        |
 | translate    | Object | { x: 0, y: 0 } | Default translate position of objects on the canvas |
 | scale | Number | 1                | Default scale of objects on the canvas |
