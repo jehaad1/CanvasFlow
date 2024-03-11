@@ -92,11 +92,11 @@ The following table lists the available canvas properties and their descriptions
 | brightness   | Number | 1             | Default brightness of objects on the canvas     |
 | contrast     | Number | 1             | Default contrast of objects on the canvas       |
 | grayscale    | Number | 0             | Default grayscale of objects on the canvas      |
-| hueRotate    | Number | 0             | Default hueRotate of objects on the canvas      |
+| hueRotate    | Number | 0             | Default hue-rotate of objects on the canvas      |
 | invert       | Number | 0             | Default invert of objects on the canvas         |
 | saturate     | Number | 1             | Default saturate of objects on the canvas       |
 | sepia        | Number | 0             | Default sepia of objects on the canvas          |
-| dropShadow   | Object | {}             | Default dropShadow of objects on the canvas    |
+| dropShadow   | Object | {}             | Default drop-shadow of objects on the canvas    |
 | zIndex       | Number | 0             | Default z-index of objects on the canvas        |
 | translate    | Object | { x: 0, y: 0 } | Default translate position of objects on the canvas |
 | scale | Number | 1                | Default scale of objects on the canvas |
